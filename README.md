@@ -1,4 +1,4 @@
-Radar copyright expert-its.
+Radar
 =====
 Ce projet est prévu pour Android Studio.
 Il utilise LibGDX http://libgdx.badlogicgames.com/ et nécessite l'execution du gdx_setup.jar afin de préparer l'environnement du projet. Une fois le setup réalisé il faut récupérer les sources 'src' des différents dossier, les 'assets' et les quelques fichiers qui comprennent des modifications (AndroidManifest.xml).
@@ -12,6 +12,6 @@ La génération du fichier APK nécéssite l'utilisation d'une signature qui n'e
 Cette version de l'application utilise les données transport (arrêts et horaires) du réseau de transport de l'agglomération de Montpellier.
 
 
-expert-its.com
+copyright expert-its.com
 
 
