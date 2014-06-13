@@ -8,28 +8,43 @@ import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 
 public class GUIController {
 	private	IGUI		_gui;
+    private PushButton  _homeButton;
 	private World		_world;
 	private float		_time;
 	private boolean		_loadBubble;
 	private SpriteBatch	_spriteBatch;
+    private Menu        menu;
 	private ZoomController	_zoomController;
 	private BitmapFont	_font;
 	private Date		_date;
 	private String		_sDate;
 	private	RefreshGUI	_refreshGUI;
+    public OrthographicCamera camera;
 	private StationManager	stationManager;
-	
-	public GUIController() {
+
+    public class ActionHome implements IAction {
+        public void exec() {
+            active_menu();
+        }
+    }
+
+    public GUIController() {
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        menu = new Menu(this);
+        _homeButton = new PushButton(new ActionHome(), new Texture(Gdx.files.internal("texture/user-home.png")), new Vector2(50, Gdx.graphics.getHeight() - 80));
 		stationManager = StationManager.instance();
 		_zoomController = new ZoomController();
 		_date = new Date();
 		_time = 0;
-		_gui = new GUI();
+		_gui = new GUI(this);
 		_world = World.instance();
 		_loadBubble = true;
 		_spriteBatch = new SpriteBatch();
@@ -39,7 +54,12 @@ public class GUIController {
         _refreshGUI = new RefreshGUI(_gui);
         _refreshGUI.start();
 	}
-	
+
+    public void active_menu()
+    {
+          menu.active();
+    }
+
 	static float random(float Min, float Max) {
 		return (float) (Min + (Math.random() * ((Max - Min) + 1)));
 	}
@@ -115,10 +135,12 @@ public class GUIController {
 		
 		_spriteBatch.begin();
 		_font.setColor(Color.WHITE);
-		_font.draw(_spriteBatch, time.hours + ":" + (time.minutes < 10 ? "0" + time.minutes : time.minutes), 40, Gdx.graphics.getHeight() - 40);
+		_font.draw(_spriteBatch, time.hours + ":" + (time.minutes < 10 ? "0" + time.minutes : time.minutes), Gdx.graphics.getWidth() - 130, Gdx.graphics.getHeight() - 40);
 		_spriteBatch.end();
 		_gui.render();
 		_zoomController.render();
+        menu.render();
+        _homeButton.draw();
 	}
 	
 	public void	invert() {
@@ -131,7 +153,8 @@ public class GUIController {
 	}
 	
 	public void tap(float x, float y) {
-		_gui.tap(x, y);
+		_homeButton.tap(x, y);
+        _gui.tap(x, y);
 	}
 	public void	refreshBubbleStop() {
 		if (_world.listBubbleStop == null)

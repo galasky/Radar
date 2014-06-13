@@ -16,8 +16,10 @@ public class GUI2 implements IGUI {
 	private String				_str;
 	private World				_world;
 	private BubbleStop			_bubbleSelect;
+    private GUIController       guiController;
 
-	public GUI2() {
+	public GUI2(GUIController gui) {
+        guiController = gui;
 		_str = new String();
 		_world = World.instance();
 		_spriteBatch = new SpriteBatch();
@@ -155,7 +157,7 @@ public class GUI2 implements IGUI {
 
 	@Override
 	public IGUI invert() {
-		return new GUI();
+		return new GUI(guiController);
 	}
 
 	@Override

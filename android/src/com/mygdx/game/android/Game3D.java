@@ -75,7 +75,6 @@ public class Game3D implements ApplicationListener {
     	assets = new AssetManager();
     	loadSound();
     	loadModel();
-    	_cam = MyCamera.instance();
     	modelBuilder = new ModelBuilder();
     	modelBatch = new ModelBatch();
     	_light = new DirectionalLight().set(0.8f, 0.8f, 0.8f, 0f, -1f, 0f);

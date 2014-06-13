@@ -24,7 +24,6 @@ public class GUI implements IGUI {
 	private MyFont			_font;
     private ArrayList<MyFont> _listFont;
 	private	World				_world;
-	private OrthographicCamera camera;
 	private SpriteBatch myBatch;
 	private Vector3 			V;
 	private double				k;
@@ -33,18 +32,24 @@ public class GUI implements IGUI {
 	private BubbleStop			_bubbleSelect;
 	private ShapeRenderer shapeDebugger;
 	private boolean				_initPosition;
+    private GUIController       guiController;
     private PushButton           _button;
 
-	public GUI() {
+    public class ChangeFont implements IAction {
+        public void exec() {
 
-        _button = new PushButton("Change Font", new Vector2(20, 50));
+        }
+    }
+
+	public GUI(GUIController gui) {
+        guiController = gui;
+        _button = new PushButton(new ChangeFont(), "Change Font", new Vector2(20, 50));
 		StationManager.instance().endDraw = true;
 		shapeDebugger = new ShapeRenderer();
 		_str = new String();
 		_world = World.instance();
 		myBatch = new SpriteBatch();
 		_spriteBatch = new SpriteBatch();
-		camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         loadFont();
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("font/SIXTY.TTF"));
         FreeTypeFontParameter parametre = new FreeTypeFontParameter();
@@ -154,7 +159,7 @@ public class GUI implements IGUI {
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		    
-		shapeDebugger.setProjectionMatrix(camera.combined);
+		shapeDebugger.setProjectionMatrix(guiController.camera.combined);
 	    shapeDebugger.begin(ShapeType.Line);
 	    shapeDebugger.setColor(0f, 0f, 0f, 0.80f);
 	    shapeDebugger.end();
@@ -220,6 +225,10 @@ public class GUI implements IGUI {
         _button.draw();
 	}
 
+    public void changeFont() {
+
+    }
+
 	@Override
 	public void tap(float x, float y) {
 
@@ -257,7 +266,7 @@ public class GUI implements IGUI {
 
 	@Override
 	public IGUI invert() {
-		return new GUI2();
+		return new GUI2(guiController);
 	}
 
 	@Override
