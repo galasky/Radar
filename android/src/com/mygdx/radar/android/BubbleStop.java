@@ -9,6 +9,7 @@ public class BubbleStop {
 	public Vector2		position;
 	//public List<StopTimes>	listStopTimes;
 	private Vector2		_direction;
+    private Vector2     pAffichage, pSave;
 	public	float		slide;
 	public Station		station;
 	public int			order;
@@ -25,6 +26,8 @@ public class BubbleStop {
 	private Vector2		_goTo;
 	
 	public BubbleStop(Station s) {
+        pAffichage = new Vector2(251, Gdx.graphics.getHeight() - 100);
+        pSave = null;
 		soundManager = SoundManager.instance();
 		soundManager.get("pop.mp3").play();
 		order = -1;
@@ -57,7 +60,7 @@ public class BubbleStop {
 		if (!select)
 			return (x >= position.x && x <= position.x + 40 * station.name.length() && y >= position.y - 50 && y <= position.y + 50);
 		else
-			return (x >= position.x && x <= position.x + 650 && y >= position.y - (station.stops.size() + 1.5f) * slide && y <= position.y + 50);
+			return (x >= position.x - Gdx.graphics.getWidth() / 2 - 160 && x <= position.x + 800 && y >=  position.y + ((station.stops.size() + 5.5f) * slide) && y <= position.y - Gdx.graphics.getHeight() / 2 + 20);
 	}
 	
 	public void		move(float deltaX, float deltaY)
@@ -72,6 +75,7 @@ public class BubbleStop {
 	{
 		slide = 0;
 		select = true;
+        pSave = new Vector2(position.x, position.y);
 	}
 	
 	public void unSelect()
@@ -110,11 +114,20 @@ public class BubbleStop {
 		{
 			if (slide < 50)
 				slide += 5;
+            position.x += (pAffichage.x - position.x) * 0.1;
+            position.y += (pAffichage.y - position.y) * 0.1;
 		}
 		else
 		{
 			if (slide > 0)
 				slide -= 5;
+            if (pSave != null)
+            {
+                position.x += (pSave.x - position.x) * 0.1;
+                position.y += (pSave.y - position.y) * 0.1;
+                if ((int) position.x  / 100 == (int) pSave.x / 100 && (int) position.y / 100 == (int) pSave.y / 100)
+                    pSave = null;
+            }
 		}
 		if (touch)
 		{

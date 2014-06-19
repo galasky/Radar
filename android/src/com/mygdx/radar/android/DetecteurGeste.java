@@ -39,7 +39,7 @@ public class DetecteurGeste implements GestureListener {
 	@Override
 	public boolean longPress(float x, float y) {
 		// TODO Auto-generated method stub
-		Game3D.instance().longPress();
+		//Game3D.instance().longPress();
 		return false;
 	}
 

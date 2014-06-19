@@ -41,6 +41,7 @@ public class GUI implements IGUI {
 	private boolean				_initPosition;
     private GUIController       guiController;
     private PushButton           _button;
+    private MyFont              fontNum, fontStationName;
 
     public class ChangeFont implements IAction {
         public void exec() {
@@ -49,6 +50,9 @@ public class GUI implements IGUI {
     }
 
 	public GUI(GUIController gui) {
+        fontNum = FontManager.instance()._listFont.get(1);
+        fontNum = new MyFont("font/HelveticaNeueBold.ttf", 96);
+        fontStationName = new MyFont("font/HelveticaNeue.ttf", 48);
         toto = new Vector2(300, 50);
         guiController = gui;
         _button = new PushButton(new ChangeFont(), "Change Font", new Vector2(20, 50));
@@ -194,10 +198,10 @@ public class GUI implements IGUI {
 
 		_spriteBatch.begin();
 		Date d = new Date();
-		_font.draw(_spriteBatch, _bubbleSelect.station.name, _bubbleSelect.position.x - 138, _bubbleSelect.position.y);
-        _font.draw(_spriteBatch, toto.x + " " + 79, 400, 400);
-        _font.draw(_spriteBatch,(int) (_bubbleSelect.station.distanceTemps * 60) + " min", _bubbleSelect.position.x + 311, _bubbleSelect.position.y);
-        sWalking.setPosition(_bubbleSelect.position.x + 266, _bubbleSelect.position.y - 35);
+		fontStationName.draw(_spriteBatch, _bubbleSelect.station.name, _bubbleSelect.position.x - 138, _bubbleSelect.position.y);
+        _font.draw(_spriteBatch, toto.x + " " + toto.y, 400, 400);
+        _font.draw(_spriteBatch,(int) (_bubbleSelect.station.distanceTemps * 60) + " min", _bubbleSelect.position.x + 311 + 211 - (50 - _bubbleSelect.slide) * 2, _bubbleSelect.position.y - 10);
+        sWalking.setPosition(_bubbleSelect.position.x + 266 + 211 - (50 - _bubbleSelect.slide) * 2, _bubbleSelect.position.y - 35 - 10);
         sWalking.draw(_spriteBatch);
 
         Iterator<Stop> i = _bubbleSelect.station.stops.iterator();
@@ -206,14 +210,14 @@ public class GUI implements IGUI {
 		{
 			Stop stop = i.next();
 			nb++;
-                sprite.setPosition(_bubbleSelect.position.x - 150, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79) - 75);
+                sprite.setPosition(_bubbleSelect.position.x - 150, 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79) - 75);
                 sprite.draw(_spriteBatch);
-                MyFont fontNum = FontManager.instance()._listFont.get(1);
-                fontNum.draw(_spriteBatch, "2", _bubbleSelect.position.x, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "DEST", _bubbleSelect.position.x + 57, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : stop.list_time.get(0).diff(new Date())), _bubbleSelect.position.x + 258, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-				_font.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : stop.list_time.get(1).diff(new Date())), _bubbleSelect.position.x + 377, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : stop.list_time.get(2).diff(new Date())), _bubbleSelect.position.x + 377 + 377 - 258, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                 fontNum.draw(_spriteBatch, "42", _bubbleSelect.position.x - 49, 59 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                _font.draw(_spriteBatch, "DESTINATION", _bubbleSelect.position.x + 86, 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                String n = new String();
+                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : (n = ""+stop.list_time.get(0).diff(new Date()))), _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+				_font.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : (n = ""+stop.list_time.get(1).diff(new Date()))), _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : (n = ""+stop.list_time.get(2).diff(new Date()))), _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
 
 		}
 		_spriteBatch.end();
