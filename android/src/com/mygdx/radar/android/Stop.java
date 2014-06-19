@@ -50,18 +50,9 @@ public class Stop {
                 insertTime(stopTimes.departure_time);
             }
         }
-        for (int u = 0; u < list_time.size(); u++)
-        {
-            Log.d("ok", "galasky TIME " + list_time.get(u).getString());
-        }
     }
 
     public void insertTime(MyTimes time) {
-        if (list_time.size() == 0)
-        {
-            list_time.add(time);
-            return ;
-        }
         for (int i = 0; i < list_time.size(); i++)
         {
             if (time.isBeforeTo(list_time.get(i)))
@@ -70,6 +61,7 @@ public class Stop {
                 return ;
             }
         }
+        list_time.add(time);
     }
 
     public void refreshListTime() {

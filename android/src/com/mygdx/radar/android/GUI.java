@@ -194,22 +194,26 @@ public class GUI implements IGUI {
 
 		_spriteBatch.begin();
 		Date d = new Date();
-		_font.draw(_spriteBatch, _bubbleSelect.station.name, _bubbleSelect.position.x - 150, _bubbleSelect.position.y);
-        _font.draw(_spriteBatch, toto.x + " " + toto.y, 400, 400);
+		_font.draw(_spriteBatch, _bubbleSelect.station.name, _bubbleSelect.position.x - 138, _bubbleSelect.position.y);
+        _font.draw(_spriteBatch, toto.x + " " + 79, 400, 400);
         _font.draw(_spriteBatch,(int) (_bubbleSelect.station.distanceTemps * 60) + " min", _bubbleSelect.position.x + 311, _bubbleSelect.position.y);
         sWalking.setPosition(_bubbleSelect.position.x + 266, _bubbleSelect.position.y - 35);
         sWalking.draw(_spriteBatch);
+
         Iterator<Stop> i = _bubbleSelect.station.stops.iterator();
 		int nb = 0;
 		while (i.hasNext())
 		{
 			Stop stop = i.next();
 			nb++;
-                sprite.setPosition(_bubbleSelect.position.x - 150, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 50) - 75);
+                sprite.setPosition(_bubbleSelect.position.x - 150, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79) - 75);
                 sprite.draw(_spriteBatch);
                 MyFont fontNum = FontManager.instance()._listFont.get(1);
-                fontNum.draw(_spriteBatch, "2", _bubbleSelect.position.x, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 50));
-				_font.draw(_spriteBatch, " -> JACOU " + (stop.list_time.size() == 0 ? "-" : stop.list_time.get(0).diff(new Date())) + " " + (stop.list_time.size() < 2 ? "-" : stop.list_time.get(1).diff(new Date())) + " " + (stop.list_time.size() < 3 ? "-" : stop.list_time.get(2).diff(new Date())), _bubbleSelect.position.x + 40, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 50));
+                fontNum.draw(_spriteBatch, "2", _bubbleSelect.position.x, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                _font.draw(_spriteBatch, "DEST", _bubbleSelect.position.x + 57, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : stop.list_time.get(0).diff(new Date())), _bubbleSelect.position.x + 258, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+				_font.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : stop.list_time.get(1).diff(new Date())), _bubbleSelect.position.x + 377, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : stop.list_time.get(2).diff(new Date())), _bubbleSelect.position.x + 377 + 377 - 258, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
 
 		}
 		_spriteBatch.end();
@@ -217,7 +221,6 @@ public class GUI implements IGUI {
 		if (_bubbleSelect.select == false && _bubbleSelect.slide <= 0)
 			_bubbleSelect = null;
 	}
-	
 	@Override
 	public void render() {
 		if (_initPosition == true)
