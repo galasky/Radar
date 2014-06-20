@@ -41,7 +41,7 @@ public class GUI implements IGUI {
 	private boolean				_initPosition;
     private GUIController       guiController;
     private PushButton           _button;
-    private MyFont              fontNum, fontStationName;
+    private MyFont              fontNum, fontStationName, fontWalk;
 
     public class ChangeFont implements IAction {
         public void exec() {
@@ -51,8 +51,9 @@ public class GUI implements IGUI {
 
 	public GUI(GUIController gui) {
         fontNum = FontManager.instance()._listFont.get(1);
-        fontNum = new MyFont("font/HelveticaNeueCondensedBold.ttf", 96);
+        fontNum = new MyFont("font/HelveticaNeueCondensedBold.ttf", 48);
         fontStationName = new MyFont("font/HelveticaNeue.ttf", 48);
+        fontWalk = new MyFont("font/HelveticaNeueBold.ttf", 48);
         toto = new Vector2(300, 50);
         guiController = gui;
         _button = new PushButton(new ChangeFont(), "Change Font", new Vector2(20, 50));
@@ -67,8 +68,8 @@ public class GUI implements IGUI {
         sprite = new Sprite(texture);
         sWalking = new Sprite(tWalking);
         //sprite.setOrigin(texture.getWidth() / 2, texture.getHeight() / 2);
-        sprite.setSize(100, 100);
-        sWalking.setSize(30, 50);
+        sprite.setSize(64, 64);
+        sWalking.setSize(40, 60);
 		StationManager.instance().endDraw = true;
 		shapeDebugger = new ShapeRenderer();
 		_str = new String();
@@ -171,7 +172,7 @@ public class GUI implements IGUI {
 	    shapeDebugger.setColor(0f, 0f, 0f, 1f);
 	    shapeDebugger.end();
 	    shapeDebugger.begin(ShapeType.Filled);
-	    shapeDebugger.rect(_bubbleSelect.position.x - Gdx.graphics.getWidth() / 2 - 160, _bubbleSelect.position.y - Gdx.graphics.getHeight() / 2 + 20, 800,  -(_bubbleSelect.station.stops.size() + 5.5f)* _bubbleSelect.slide);
+	    shapeDebugger.rect(_bubbleSelect.position.x - Gdx.graphics.getWidth() / 2, _bubbleSelect.position.y - Gdx.graphics.getHeight() / 2, 800,  (-73 -(_bubbleSelect.station.stops.size())* 76) * _bubbleSelect.slide / 50);
 	    shapeDebugger.end();
 	    myBatch.end();
 	    
@@ -198,28 +199,38 @@ public class GUI implements IGUI {
 
 		_spriteBatch.begin();
 		Date d = new Date();
-		fontStationName.draw(_spriteBatch, _bubbleSelect.station.name, _bubbleSelect.position.x - 138, _bubbleSelect.position.y);
+        int nb;
+		fontStationName.draw(_spriteBatch, _bubbleSelect.station.name, 159 + _bubbleSelect.position.x - 138, -17 + _bubbleSelect.position.y);
         _font.draw(_spriteBatch, toto.x + " " + toto.y, 400, 400);
-        _font.draw(_spriteBatch,(int) (_bubbleSelect.station.distanceTemps * 60) + " min", _bubbleSelect.position.x + 311 + 211 - (50 - _bubbleSelect.slide) * 2, _bubbleSelect.position.y - 10);
-        sWalking.setPosition(_bubbleSelect.position.x + 266 + 211 - (50 - _bubbleSelect.slide) * 2, _bubbleSelect.position.y - 35 - 10);
+        fontNum.draw(_spriteBatch,((nb = (int) (_bubbleSelect.station.distanceTemps * 60)) <= 9 ? "0" + nb : nb) + " mn", 662 + _bubbleSelect.position.x - (50 - _bubbleSelect.slide) * 2, -17 + _bubbleSelect.position.y - 10);
+        sWalking.setPosition(_bubbleSelect.position.x + 610 - (50 - _bubbleSelect.slide) * 2, -20 + _bubbleSelect.position.y - 35 - 10);
         sWalking.draw(_spriteBatch);
 
         Iterator<Stop> i = _bubbleSelect.station.stops.iterator();
-		int nb = 0;
+		nb = 0;
+        int t;
 		while (i.hasNext())
 		{
 			Stop stop = i.next();
 			nb++;
-                sprite.setPosition(_bubbleSelect.position.x - 150, -23 + 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47) - 75);
-                sprite.draw(_spriteBatch);
-                 fontNum.draw(_spriteBatch, "42", _bubbleSelect.position.x - 49, -23 + 59 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
-                _font.draw(_spriteBatch, "DESTINATION", _bubbleSelect.position.x + 86, -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47))    ;
-                String n = new String();
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : ((n = ""+stop.list_time.get(0).diff(new Date()))).length() >= 3 ? n = "" : n), _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), 47 + -23 +  _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
-				_font.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : ((n = ""+stop.list_time.get(1).diff(new Date()))).length() >= 3 ? n = "~" : n), _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), 47 + -23 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : ((n = ""+stop.list_time.get(2).diff(new Date()))).length() >= 3 ? n = "~" : n), _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), 47 + -23 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
+            /*myBatch.begin();
+            shapeDebugger.begin(ShapeType.Filled);
+            shapeDebugger.setColor(Color.GRAY);
+            shapeDebugger.rect(toto.x, toto.y, 50, 50);
+            shapeDebugger.end();
+            myBatch.end();*/
 
-		}
+                sprite.setPosition(159 + _bubbleSelect.position.x - 141, -21 +  _bubbleSelect.position.y - 40 - nb * (_bubbleSelect.slide + 28));
+                sprite.draw(_spriteBatch);
+                 fontNum.draw(_spriteBatch, "42", 87 + _bubbleSelect.position.x, -21 + 5 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+                _font.draw(_spriteBatch, "ABLPDEXPKFESIMW", 152 + _bubbleSelect.position.x, -21 + -17 + -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+                String n = new String();
+
+                fontNum.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n), 159 + _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+				fontNum.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n), 159 + _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+                fontNum.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n), 159 + _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+
+    }
 		_spriteBatch.end();
 		
 		if (_bubbleSelect.select == false && _bubbleSelect.slide <= 0)

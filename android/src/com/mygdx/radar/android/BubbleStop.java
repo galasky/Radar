@@ -26,7 +26,7 @@ public class BubbleStop {
 	private Vector2		_goTo;
 	
 	public BubbleStop(Station s) {
-        pAffichage = new Vector2(251, Gdx.graphics.getHeight() - 100);
+        pAffichage = new Vector2(98, Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() - 1735));
         pSave = null;
 		soundManager = SoundManager.instance();
 		soundManager.get("pop.mp3").play();
