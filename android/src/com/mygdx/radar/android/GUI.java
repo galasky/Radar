@@ -51,7 +51,7 @@ public class GUI implements IGUI {
 
 	public GUI(GUIController gui) {
         fontNum = FontManager.instance()._listFont.get(1);
-        fontNum = new MyFont("font/HelveticaNeueBold.ttf", 96);
+        fontNum = new MyFont("font/HelveticaNeueCondensedBold.ttf", 96);
         fontStationName = new MyFont("font/HelveticaNeue.ttf", 48);
         toto = new Vector2(300, 50);
         guiController = gui;
@@ -210,14 +210,14 @@ public class GUI implements IGUI {
 		{
 			Stop stop = i.next();
 			nb++;
-                sprite.setPosition(_bubbleSelect.position.x - 150, 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79) - 75);
+                sprite.setPosition(_bubbleSelect.position.x - 150, -23 + 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47) - 75);
                 sprite.draw(_spriteBatch);
-                 fontNum.draw(_spriteBatch, "42", _bubbleSelect.position.x - 49, 59 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "DESTINATION", _bubbleSelect.position.x + 86, 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                 fontNum.draw(_spriteBatch, "42", _bubbleSelect.position.x - 49, -23 + 59 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
+                _font.draw(_spriteBatch, "DESTINATION", _bubbleSelect.position.x + 86, -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47))    ;
                 String n = new String();
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : (n = ""+stop.list_time.get(0).diff(new Date()))), _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-				_font.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : (n = ""+stop.list_time.get(1).diff(new Date()))), _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : (n = ""+stop.list_time.get(2).diff(new Date()))), _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), 47 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
+                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : ((n = ""+stop.list_time.get(0).diff(new Date()))).length() >= 3 ? n = "" : n), _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), 47 + -23 +  _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
+				_font.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : ((n = ""+stop.list_time.get(1).diff(new Date()))).length() >= 3 ? n = "~" : n), _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), 47 + -23 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
+                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : ((n = ""+stop.list_time.get(2).diff(new Date()))).length() >= 3 ? n = "~" : n), _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), 47 + -23 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 47));
 
 		}
 		_spriteBatch.end();
