@@ -29,4 +29,8 @@ public class MyFont {
     public void draw(SpriteBatch batch, String str, float x, float y) {
         _font.draw(batch, str, x, y);
     }
+
+    public void setColor(Color color) {
+        _font.setColor(color);
+    }
 }

@@ -41,6 +41,7 @@ public class GUI implements IGUI {
 	private boolean				_initPosition;
     private GUIController       guiController;
     private PushButton           _button;
+    private Color               green, orange, red, grey;
     private MyFont              fontNum, fontStationName, fontWalk;
 
     public class ChangeFont implements IAction {
@@ -50,6 +51,10 @@ public class GUI implements IGUI {
     }
 
 	public GUI(GUIController gui) {
+        green = new Color().set(129 / 255f, 215 / 255f, 89 / 255f, 1f);
+        orange = new Color().set(230 / 255f, 163 / 255f, 64 / 255f, 1f);
+        red = new Color().set(210 / 255f, 90 / 255f, 87 / 255f, 1f);
+        grey = new Color().set(83 / 255f, 88 / 255f, 95 / 255f, 1f);
         fontNum = FontManager.instance()._listFont.get(1);
         fontNum = new MyFont("font/HelveticaNeueCondensedBold.ttf", 48);
         fontStationName = new MyFont("font/HelveticaNeue.ttf", 48);
@@ -160,6 +165,7 @@ public class GUI implements IGUI {
 	
 	private void renderSelect() {
 
+        fontNum.setColor(Color.WHITE);
 		myBatch.begin();
 		Gdx.gl20.glLineWidth(10);
 		
@@ -199,39 +205,79 @@ public class GUI implements IGUI {
 
 		_spriteBatch.begin();
 		Date d = new Date();
-        int nb;
+        int nb, walkingTime;
 		fontStationName.draw(_spriteBatch, _bubbleSelect.station.name, 159 + _bubbleSelect.position.x - 138, -17 + _bubbleSelect.position.y);
         _font.draw(_spriteBatch, toto.x + " " + toto.y, 400, 400);
-        fontNum.draw(_spriteBatch,((nb = (int) (_bubbleSelect.station.distanceTemps * 60)) <= 9 ? "0" + nb : nb) + " mn", 662 + _bubbleSelect.position.x - (50 - _bubbleSelect.slide) * 2, -17 + _bubbleSelect.position.y - 10);
-        sWalking.setPosition(_bubbleSelect.position.x + 610 - (50 - _bubbleSelect.slide) * 2, -20 + _bubbleSelect.position.y - 35 - 10);
+        fontNum.setColor(green);
+        fontNum.draw(_spriteBatch,((walkingTime = (int) (_bubbleSelect.station.distanceTemps * 60)) <= 9 ? "0" + walkingTime : walkingTime) + " mn", -45 + 662 + _bubbleSelect.position.x - (50 - _bubbleSelect.slide) * 2, -17 + _bubbleSelect.position.y - 10);
+        sWalking.setPosition(_bubbleSelect.position.x + 610 + -45 - (50 - _bubbleSelect.slide) * 2, -20 + _bubbleSelect.position.y - 35 - 10);
         sWalking.draw(_spriteBatch);
-
+        _spriteBatch.end();
         Iterator<Stop> i = _bubbleSelect.station.stops.iterator();
 		nb = 0;
-        int t;
+
 		while (i.hasNext())
 		{
+            fontNum.setColor(Color.WHITE);
+            int time1, time2, time3;
+            int t = 999;
+
 			Stop stop = i.next();
 			nb++;
-            /*myBatch.begin();
+            time1 = (stop.list_time.size() < 1 ? 999 : stop.list_time.get(0).diff(new Date()));
+            time2 = (stop.list_time.size() < 2 ? 999 : stop.list_time.get(1).diff(new Date()));
+            time3 = (stop.list_time.size() < 3 ? 999 : stop.list_time.get(2).diff(new Date()));
+
+            myBatch.begin();
             shapeDebugger.begin(ShapeType.Filled);
-            shapeDebugger.setColor(Color.GRAY);
-            shapeDebugger.rect(toto.x, toto.y, 50, 50);
+            shapeDebugger.setColor(grey);
+            shapeDebugger.rect(_bubbleSelect.position.x + 10 + 0 * 62, _bubbleSelect.position.y - 1050 + (nb - 1) * -77, 60, 60);
+            shapeDebugger.rect(_bubbleSelect.position.x + 10 + 1 * 62, _bubbleSelect.position.y - 1050 + (nb - 1) * -77, 60, 60);
+            shapeDebugger.rect(_bubbleSelect.position.x + 10 + 2 * 62, _bubbleSelect.position.y - 1050 + (nb - 1) * -77, 60, 60);
             shapeDebugger.end();
-            myBatch.end();*/
+            myBatch.end();
 
-                sprite.setPosition(159 + _bubbleSelect.position.x - 141, -21 +  _bubbleSelect.position.y - 40 - nb * (_bubbleSelect.slide + 28));
-                sprite.draw(_spriteBatch);
-                 fontNum.draw(_spriteBatch, "42", 87 + _bubbleSelect.position.x, -21 + 5 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-                _font.draw(_spriteBatch, "ABLPDEXPKFESIMW", 152 + _bubbleSelect.position.x, -21 + -17 + -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-                String n = new String();
+            _spriteBatch.begin();
+            sprite.setPosition(159 + _bubbleSelect.position.x - 141, -21 +  _bubbleSelect.position.y - 40 - nb * (_bubbleSelect.slide + 28));
+            sprite.draw(_spriteBatch);
+            fontNum.draw(_spriteBatch, "42", 87 + _bubbleSelect.position.x, -21 + 5 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+            _font.draw(_spriteBatch, "ABLPDEXPKFESIMW", 152 + _bubbleSelect.position.x, -21 + -17 + -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
 
-                fontNum.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n), 159 + _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-				fontNum.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n), 159 + _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-                fontNum.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n), 159 + _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+            t = 999;
+            String n = new String();
 
+            String str = new String();
+
+            str = "" + (stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+
+            if (t - walkingTime <= 0)
+                fontNum.setColor(red);
+            else if (t - walkingTime <= 3)
+                fontNum.setColor(orange);
+            else
+                fontNum.setColor(green);
+            fontNum.draw(_spriteBatch, str, 159 + _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+
+            str = "" + (stop.list_time.size() < 2 ? "-" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            if (t - walkingTime <= 0)
+                fontNum.setColor(red);
+            else if (t - walkingTime <= 3)
+                fontNum.setColor(orange);
+            else
+                fontNum.setColor(green);
+            fontNum.draw(_spriteBatch, str, 159 + _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+
+            str = "" + (stop.list_time.size() < 3 ? "-" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            if (t - walkingTime <= 0)
+                fontNum.setColor(red);
+            else if (t - walkingTime <= 3)
+                fontNum.setColor(orange);
+            else
+                fontNum.setColor(green);
+            fontNum.draw(_spriteBatch, str, 159 + _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+            _spriteBatch.end();
     }
-		_spriteBatch.end();
+
 		
 		if (_bubbleSelect.select == false && _bubbleSelect.slide <= 0)
 			_bubbleSelect = null;

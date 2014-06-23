@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.view.WindowManager;
 
 
 public class AndroidLauncher extends AndroidApplication implements LocationListener {
@@ -18,7 +19,7 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
         super.onCreate(savedInstanceState);
 
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         cfg.useCompass = true;
         Territory territory = Territory.instance();
         territory.setContext(this);
