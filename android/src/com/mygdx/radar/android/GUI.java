@@ -164,8 +164,8 @@ public class GUI implements IGUI {
 	}
 	
 	private void renderSelect() {
-
-        fontNum.setColor(Color.WHITE);
+        _bubbleSelect.render(guiController);
+       /* fontNum.setColor(Color.WHITE);
 		myBatch.begin();
 		Gdx.gl20.glLineWidth(10);
 		
@@ -181,23 +181,7 @@ public class GUI implements IGUI {
 	    shapeDebugger.rect(_bubbleSelect.position.x - Gdx.graphics.getWidth() / 2, _bubbleSelect.position.y - Gdx.graphics.getHeight() / 2, 800,  (-73 -(_bubbleSelect.station.stops.size())* 76) * _bubbleSelect.slide / 50);
 	    shapeDebugger.end();
 	    myBatch.end();
-	    
-	/*	myBatch.begin();
-		Gdx.gl20.glLineWidth(20);
-		
-		//Enable transparency
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		    
-		shapeDebugger.setProjectionMatrix(MyCamera.instance().pCam.combined);
-	    shapeDebugger.begin(ShapeType.Line);
-	    shapeDebugger.setColor(1f, 1f, 1f, 0.80f);
-	    Vector3 A = new Vector3(_bubbleSelect.station.position.y, 0.8f, _bubbleSelect.station.position.x);
-	    Vector3 B = MyCamera.instance().transorm(_bubbleSelect.position);
-	    
-	    shapeDebugger.line(A, B);
-	    shapeDebugger.end();
-	    myBatch.end();*/
+
 	    
 	    Gdx.gl.glDisable(GL20.GL_BLEND);
 
@@ -240,8 +224,8 @@ public class GUI implements IGUI {
             _spriteBatch.begin();
             sprite.setPosition(159 + _bubbleSelect.position.x - 141, -21 +  _bubbleSelect.position.y - 40 - nb * (_bubbleSelect.slide + 28));
             sprite.draw(_spriteBatch);
-            fontNum.draw(_spriteBatch, "42", 87 + _bubbleSelect.position.x, -21 + 5 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-            _font.draw(_spriteBatch, "ABLPDEXPKFESIMW", 152 + _bubbleSelect.position.x, -21 + -17 + -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+            fontNum.draw(_spriteBatch, World.instance().routes.get("2").route_short_name, 87 + _bubbleSelect.position.x, -21 + 5 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
+            _font.draw(_spriteBatch, World.instance().routes.get("2").route_long_name, 152 + _bubbleSelect.position.x, -21 + -17 + -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
 
             t = 999;
             String n = new String();
@@ -276,7 +260,7 @@ public class GUI implements IGUI {
                 fontNum.setColor(green);
             fontNum.draw(_spriteBatch, str, 159 + _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
             _spriteBatch.end();
-    }
+    }*/
 
 		
 		if (_bubbleSelect.select == false && _bubbleSelect.slide <= 0)
@@ -287,7 +271,7 @@ public class GUI implements IGUI {
 		if (_initPosition == true)
 			initPosition();
 		updateBubbleStop();
-		
+
 		if (_bubbleSelect == null)
 			renderAll();
 		else

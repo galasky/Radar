@@ -43,7 +43,28 @@ public class Territory {
         private final static Territory instance = new Territory();
     }
 
+    private void    loadRoutes() {
+
+
+        Cursor cursor = myDbHelper.execSQL("SELECT * FROM routes");
+
+
+        Route route = null;
+        if (cursor.moveToFirst()) {
+            cursor.moveToNext();
+            do {
+                route = new Route();
+                route.route_id = cursor.getString(cursor.getColumnIndex("route_id"));
+                route.route_short_name = cursor.getString(cursor.getColumnIndex("route_short_name"));
+                route.route_long_name = cursor.getString(cursor.getColumnIndex("route_long_name"));
+                World.instance().routes.put(route.route_id, route);
+            } while (cursor.moveToNext());
+        }
+
+    }
+
     public List<Stop> getListStopByDistance(double distance, CoordinateGPS position) {
+        loadRoutes();
     	Cursor cursor = myDbHelper.execSQL("SELECT * FROM stops");
 
        
@@ -134,13 +155,14 @@ public class Territory {
                 stopTimes.arrival_time = new MyTimes(cursor.getString(cursor.getColumnIndex("arrival_time")));
                 stopTimes.departure_time = new MyTimes(cursor.getString(cursor.getColumnIndex("departure_time")));
                 stopTimes.stop_sequence = cursor.getString(cursor.getColumnIndex("stop_sequence"));
+                stopTimes.loadTrip();
                 listStopTimes.add(stopTimes);
             } while (cursor.moveToNext());
         }
         return listStopTimes;
     }
 
-    public Trips getTripsByTripId(String trip_id) {
+   public Trips getTripsByTripId(String trip_id) {
     	Cursor cursor = myDbHelper.execSQL("SELECT * FROM trips WHERE trip_id = " + trip_id);
     	Trips trips = null;
     	

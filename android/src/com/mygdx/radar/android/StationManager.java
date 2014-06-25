@@ -7,8 +7,13 @@ import java.util.List;
 import android.util.Log;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
+import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 
 public class StationManager {
@@ -76,19 +81,23 @@ public class StationManager {
 	}
 	
 	public void loadInstance(Station station) {
+        ModelBuilder modelBuilder = new ModelBuilder();
+
 		Vector3 decal = new Vector3();
-		Model model;
-        ModelInstance instance;
-		
-        model = Game3D.instance().assets.get("data/steve/steve.obj", Model.class);
+
+        Texture tstation = new Texture("texture/info_icon.png");
+        Model model = modelBuilder.createBox(0.5f, 2f, .01f,
+                new Material(TextureAttribute.createDiffuse(tstation)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+
+        //model = Game3D.instance().assets.get("data/steve/steve.obj", Model.class);
     	decal.x = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(station.coord.latitude, _you.coordinate.longitude)) * 10 * (station.coord.latitude > _you.coordinate.latitude ? 1 : -1);
     	decal.z = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(_you.coordinate.latitude, station.coord.longitude)) * 10 *(station.coord.longitude > _you.coordinate.longitude ? 1 : -1);
-        instance = new ModelInstance(model);
+        ModelInstance instance = new ModelInstance(model);
 	    station.position.x = decal.z;
 	    station.position.y = decal.x;
 	    station.instance = instance;
-	    station.instance.transform.setTranslation(decal.x, 0, decal.z);
-	    station.instance.transform.scale(0.1f, 0.1f, 0.1f);
+	    station.instance.transform.setTranslation(decal.x, 1, decal.z);
+	    //station.instance.transform.scale(0.1f, 0.1f, 0.1f);
 	    Game3D.instance().instances.add(instance);
 	}
 	
