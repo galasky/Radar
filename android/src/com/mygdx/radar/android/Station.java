@@ -34,7 +34,8 @@ public class Station {
         double a = Math.acos((u.x * v.x + u.y * v.y) / (Math.sqrt(u.x * u.x + u.y * u.y) * Math.sqrt(v.x * v.x + v.y * v.y)));
 
         a = 180 * (a) / Math.PI;
-        
+        if (a > 5)
+            a *= -1;
         if (a > 0.1 || a < -0.1) {
             instance.transform.rotate(new Vector3(0, 1, 0), (float) a);
             u = u.rotate((float) a);

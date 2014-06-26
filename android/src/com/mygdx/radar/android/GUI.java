@@ -2,6 +2,7 @@ package com.mygdx.radar.android;
 
 import android.widget.Button;
 
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -165,103 +166,6 @@ public class GUI implements IGUI {
 	
 	private void renderSelect() {
         _bubbleSelect.render(guiController);
-       /* fontNum.setColor(Color.WHITE);
-		myBatch.begin();
-		Gdx.gl20.glLineWidth(10);
-		
-		//Enable transparency
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		    
-		shapeDebugger.setProjectionMatrix(guiController.camera.combined);
-	    shapeDebugger.begin(ShapeType.Line);
-	    shapeDebugger.setColor(0f, 0f, 0f, 1f);
-	    shapeDebugger.end();
-	    shapeDebugger.begin(ShapeType.Filled);
-	    shapeDebugger.rect(_bubbleSelect.position.x - Gdx.graphics.getWidth() / 2, _bubbleSelect.position.y - Gdx.graphics.getHeight() / 2, 800,  (-73 -(_bubbleSelect.station.stops.size())* 76) * _bubbleSelect.slide / 50);
-	    shapeDebugger.end();
-	    myBatch.end();
-
-	    
-	    Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
-
-		_spriteBatch.begin();
-		Date d = new Date();
-        int nb, walkingTime;
-		fontStationName.draw(_spriteBatch, _bubbleSelect.station.name, 159 + _bubbleSelect.position.x - 138, -17 + _bubbleSelect.position.y);
-        _font.draw(_spriteBatch, toto.x + " " + toto.y, 400, 400);
-        fontNum.setColor(green);
-        fontNum.draw(_spriteBatch,((walkingTime = (int) (_bubbleSelect.station.distanceTemps * 60)) <= 9 ? "0" + walkingTime : walkingTime) + " mn", -45 + 662 + _bubbleSelect.position.x - (50 - _bubbleSelect.slide) * 2, -17 + _bubbleSelect.position.y - 10);
-        sWalking.setPosition(_bubbleSelect.position.x + 610 + -45 - (50 - _bubbleSelect.slide) * 2, -20 + _bubbleSelect.position.y - 35 - 10);
-        sWalking.draw(_spriteBatch);
-        _spriteBatch.end();
-        Iterator<Stop> i = _bubbleSelect.station.stops.iterator();
-		nb = 0;
-
-		while (i.hasNext())
-		{
-            fontNum.setColor(Color.WHITE);
-            int time1, time2, time3;
-            int t = 999;
-
-			Stop stop = i.next();
-			nb++;
-            time1 = (stop.list_time.size() < 1 ? 999 : stop.list_time.get(0).diff(new Date()));
-            time2 = (stop.list_time.size() < 2 ? 999 : stop.list_time.get(1).diff(new Date()));
-            time3 = (stop.list_time.size() < 3 ? 999 : stop.list_time.get(2).diff(new Date()));
-
-            myBatch.begin();
-            shapeDebugger.begin(ShapeType.Filled);
-            shapeDebugger.setColor(grey);
-            shapeDebugger.rect(_bubbleSelect.position.x + 10 + 0 * 62, _bubbleSelect.position.y - 1050 + (nb - 1) * -77, 60, 60);
-            shapeDebugger.rect(_bubbleSelect.position.x + 10 + 1 * 62, _bubbleSelect.position.y - 1050 + (nb - 1) * -77, 60, 60);
-            shapeDebugger.rect(_bubbleSelect.position.x + 10 + 2 * 62, _bubbleSelect.position.y - 1050 + (nb - 1) * -77, 60, 60);
-            shapeDebugger.end();
-            myBatch.end();
-
-            _spriteBatch.begin();
-            sprite.setPosition(159 + _bubbleSelect.position.x - 141, -21 +  _bubbleSelect.position.y - 40 - nb * (_bubbleSelect.slide + 28));
-            sprite.draw(_spriteBatch);
-            fontNum.draw(_spriteBatch, World.instance().routes.get("2").route_short_name, 87 + _bubbleSelect.position.x, -21 + 5 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-            _font.draw(_spriteBatch, World.instance().routes.get("2").route_long_name, 152 + _bubbleSelect.position.x, -21 + -17 + -23 + 40 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-
-            t = 999;
-            String n = new String();
-
-            String str = new String();
-
-            str = "" + (stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
-
-            if (t - walkingTime <= 0)
-                fontNum.setColor(red);
-            else if (t - walkingTime <= 3)
-                fontNum.setColor(orange);
-            else
-                fontNum.setColor(green);
-            fontNum.draw(_spriteBatch, str, 159 + _bubbleSelect.position.x + 480 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-
-            str = "" + (stop.list_time.size() < 2 ? "-" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
-            if (t - walkingTime <= 0)
-                fontNum.setColor(red);
-            else if (t - walkingTime <= 3)
-                fontNum.setColor(orange);
-            else
-                fontNum.setColor(green);
-            fontNum.draw(_spriteBatch, str, 159 + _bubbleSelect.position.x + 540 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-
-            str = "" + (stop.list_time.size() < 3 ? "-" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
-            if (t - walkingTime <= 0)
-                fontNum.setColor(red);
-            else if (t - walkingTime <= 3)
-                fontNum.setColor(orange);
-            else
-                fontNum.setColor(green);
-            fontNum.draw(_spriteBatch, str, 159 + _bubbleSelect.position.x + 600 - 20 * (n.length() - 1), -21 + 6 + _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 28));
-            _spriteBatch.end();
-    }*/
-
 		
 		if (_bubbleSelect.select == false && _bubbleSelect.slide <= 0)
 			_bubbleSelect = null;
@@ -272,10 +176,24 @@ public class GUI implements IGUI {
 			initPosition();
 		updateBubbleStop();
 
-		if (_bubbleSelect == null)
+        if (World.instance().listBubbleStop != null)
+        {
+           // Iterator<BubbleStop> it = World.instance().listBubbleStop.iterator();
+            int i = 0;
+
+            while (i < World.instance().listBubbleStop.size())
+            {
+                BubbleStop b = World.instance().listBubbleStop.get(i);
+                b.render(guiController);
+                i++;
+            }
+        }
+
+
+/*		if (_bubbleSelect == null)
 			renderAll();
 		else
-			renderSelect();
+			renderSelect();*/
         _button.draw();
 	}
 

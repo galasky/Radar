@@ -12,6 +12,6 @@ public class StopTimes {
     }
 
     public void loadTrip() {
-        trip = Territory.instance().getTripsByTripId(trip_id);
+        //trip = Territory.instance().getTripsByTripId(trip_id);
     }
 }

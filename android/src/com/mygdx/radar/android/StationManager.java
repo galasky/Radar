@@ -115,7 +115,7 @@ public class StationManager {
 			while (it.hasNext())
 			{
 				BubbleStop b = it.next();
-				World.instance().listBubbleStop.add(b);
+				World.instance().addBubble(b);
 			}
 			listTmp.clear();
 		}

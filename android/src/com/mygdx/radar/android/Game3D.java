@@ -94,6 +94,7 @@ public class Game3D implements ApplicationListener {
         environment.add(_light);
         _skyBox = new SkyBox(environment);
         _plate = new Plate(environment);
+        BubbleDrawer.instance();
         _guiController = new GUIController();
         DetecteurGeste monDetecteurGeste = new DetecteurGeste();
 		Gdx.input.setInputProcessor(new GestureDetector (monDetecteurGeste));
