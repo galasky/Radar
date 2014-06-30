@@ -161,6 +161,7 @@ public class BubbleStop {
     public void scroll(float deltaY) {
         pAffichage.y -= deltaY * 2;
     }
+
     public void render(GUIController guiController) {
         bd.fontNum.setColor(Color.WHITE);
         bd.myBatch.begin();
@@ -214,14 +215,10 @@ public class BubbleStop {
 
         while (i.hasNext()) {
             bd.fontNum.setColor(Color.WHITE);
-            int time1, time2, time3;
             int t = 999;
 
             Stop stop = i.next();
             nb++;
-            time1 = (stop.list_time.size() < 1 ? 999 : stop.list_time.get(0).diff(new Date()));
-            time2 = (stop.list_time.size() < 2 ? 999 : stop.list_time.get(1).diff(new Date()));
-            time3 = (stop.list_time.size() < 3 ? 999 : stop.list_time.get(2).diff(new Date()));
 
             bd.myBatch.begin();
             bd.shapeDebugger.setProjectionMatrix(guiController.camera.combined);
@@ -244,29 +241,29 @@ public class BubbleStop {
 
             String str = new String();
 
-            str = "" + (stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            str = "" + (stop.list_time == null ||stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
 
-            if (t - walkingTime <= 0)
+            if (t - walkingTime <= Config.instance().timeRed)
                 bd.fontNum.setColor(bd.red);
-            else if (t - walkingTime <= 3)
+            else if (t - walkingTime <= Config.instance().timeOrange)
                 bd.fontNum.setColor(bd.orange);
             else
                 bd.fontNum.setColor(bd.green);
             bd.fontNum.draw(bd._spriteBatch, str, 159 + position.x + 480 - 20 * (n.length() - 1), -21 + 6 + position.y - nb * (slide + 28));
 
-            str = "" + (stop.list_time.size() < 2 ? "-" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
-            if (t - walkingTime <= 0)
+            str = "" + (stop.list_time == null || stop.list_time.size() < 2 ? "-" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            if (t - walkingTime <= Config.instance().timeRed)
                 bd.fontNum.setColor(bd.red);
-            else if (t - walkingTime <= 3)
+            else if (t - walkingTime <= Config.instance().timeOrange)
                 bd.fontNum.setColor(bd.orange);
             else
                 bd.fontNum.setColor(bd.green);
             bd.fontNum.draw(bd._spriteBatch, str, 159 + position.x + 540 - 20 * (n.length() - 1), -21 + 6 + position.y - nb * (slide + 28));
 
-            str = "" + (stop.list_time.size() < 3 ? "-" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
-            if (t - walkingTime <= 0)
+            str = "" + (stop.list_time == null || stop.list_time.size() < 3 ? "-" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            if (t - walkingTime <= Config.instance().timeRed)
                 bd.fontNum.setColor(bd.red);
-            else if (t - walkingTime <= 3)
+            else if (t - walkingTime <= Config.instance().timeOrange)
                 bd.fontNum.setColor(bd.orange);
             else
                 bd.fontNum.setColor(bd.green);

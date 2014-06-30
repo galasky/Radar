@@ -18,7 +18,7 @@ public class Station {
 	public ModelInstance	instance;
 	public float			distance;
 	public float			distanceTemps;
-    public Vector2          u;
+    public Vector2          u; // vecteur pour l'orientation du model vers la caméra
 	
 	public Station() {
 	   	instance = null;

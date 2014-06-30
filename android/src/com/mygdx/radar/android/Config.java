@@ -3,9 +3,13 @@ package com.mygdx.radar.android;
 public class Config {
 
 	public float	distance;
-	
+    public int      timeRed;
+    public int      timeOrange;
+
     private Config() {
-    	distance = 0.5f;
+        timeRed = 0;
+    	timeOrange = 3;
+        distance = 4f;
     }
 
     public static Config instance() {

@@ -32,13 +32,15 @@ public class Stop {
     }
 
     public void	getListStopTimes() {
-    	listStopTimes = Territory.instance().getListStopTimesByStopId(stop_id);
+    	listStopTimes = null;//Territory.instance().getListStopTimesByStopId(stop_id);
+        list_time = null;
         initListTime();
     }
 
     public void initListTime() {
+        if (listStopTimes == null)
+            return;
         Date d = new Date();
-
         Iterator<StopTimes> i = listStopTimes.iterator();
         StopTimes stopTimes = null;
         list_time = new ArrayList<MyTimes>();
@@ -67,7 +69,7 @@ public class Stop {
     public void refreshListTime() {
         Date d = new Date();
 
-        if (list_time.size() == 0)
+        if (list_time == null ||list_time.size() == 0)
             return ;
         if (list_time.get(0).isBeforeTo(d))
         {

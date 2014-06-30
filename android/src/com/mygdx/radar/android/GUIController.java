@@ -129,20 +129,4 @@ public class GUIController {
         menu.tap(x, y);
         _gui.tap(x, y);
 	}
-	public void	refreshBubbleStop() {
-		if (_world.listBubbleStop == null)
-			return ;
-		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
-		BubbleStop bubble = null;
-		while (i.hasNext())
-		{
-			bubble = i.next();
-			Iterator<Stop> u = bubble.station.stops.iterator();
-			while (u.hasNext())
-			{
-				Stop stop = u.next();
-				stop.refreshNextTime();
-			}
-		}
-	}
 }

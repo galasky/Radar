@@ -10,23 +10,11 @@ import java.util.List;
 import android.content.Context;
 import android.database.Cursor;
 
-/**
- * Created by Administrateur on 11/04/14.
- */
 public class Territory {
     private DataBaseHelper  myDbHelper;
     private Context         myContext;
 
     private Territory() {
-    }
-    
-    public String getTOTO() {
-    	Cursor c = myDbHelper.execSQL("SELECT name FROM sqlite_master WHERE type='table' AND name='stops'");
-
-    	if (c.moveToFirst()) {
-    		return c.getString(0);
-    	}
-    	return ("vache");
     }
     
     public void setContext(Context context) {
@@ -44,12 +32,8 @@ public class Territory {
     }
 
     private void    loadRoutes() {
-
-
         Cursor cursor = myDbHelper.execSQL("SELECT * FROM routes");
-
-
-        Route route = null;
+        Route route;
         if (cursor.moveToFirst()) {
             cursor.moveToNext();
             do {
@@ -69,7 +53,7 @@ public class Territory {
 
        
         List<Stop> listStops = new ArrayList<Stop>();
-        Stop stop = null;
+        Stop stop;
         if (cursor.moveToFirst()) {
             cursor.moveToNext();
             do {
@@ -112,7 +96,7 @@ public class Territory {
         Cursor cursor = myDbHelper.execSQL("SELECT * FROM calendar_dates WHERE service_id = '" + idService +"'");
 
         if (cursor.moveToFirst()) {
-            String str = new String();
+            String str;
             int year, month, day;
             str = cursor.getString(cursor.getColumnIndex("date"));
             year = Integer.valueOf(str.substring(0, 4));
@@ -146,7 +130,7 @@ public class Territory {
     	Cursor cursor = myDbHelper.execSQL("SELECT * FROM stop_times WHERE stop_id = " + stop_id);
         
         List<StopTimes> listStopTimes = new ArrayList<StopTimes>();
-        StopTimes stopTimes = null;
+        StopTimes stopTimes;
         if (cursor.moveToFirst()) {
             cursor.moveToNext();
             do {
@@ -206,12 +190,6 @@ public class Territory {
             }
         }
         return (available.equals("1"));
-    }
-
-    public Path getPath(Date today, String StopId) {
-        Path path = new Path();
-
-        return path;
     }
 
     private void loadData() {

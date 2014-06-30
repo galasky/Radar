@@ -17,20 +17,17 @@ public class You {
 	public Vector3			position;
 	private boolean 		_loaded;
 	public CoordinateGPS	coordinate;
-	private float			_angle;
 	private ModelBuilder 	modelBuilder;
 	public CoordinateGPS	start;
 	public ModelInstance	steve;
-	private Vector3			_goTo;
-	private	You() {
+
+    private	You() {
 		modelBuilder = new ModelBuilder();
 		position = new Vector3(0, 0, 0);
-		_goTo = null;
 		_loaded = true;
 		steve = null;
 		coordinate = null;
 		start = null;
-		_angle = 0f;
 	}
 	
 	public void setRotation(float angle) {
@@ -38,7 +35,6 @@ public class You {
 		{
 			steve.transform.setToRotation(new Vector3(0, 1, 0), (float) (-180 * angle / Math.PI));
 			steve.transform.scale(0.2f, 0.2f, 0.2f);
-			_angle = angle;
 		}
 	}
 	
@@ -53,22 +49,8 @@ public class You {
        	_loaded = true;
 	}
 	
-	
-	public boolean isLoaded() {
-		return _loaded;
-	}
-	
-/*	public void goTo(Vector3 goTo)
-	{
-		_goTo = goTo;
-	}*/
-	
-	public void update() {
-		//modelInstance.transform.setTranslation(_goTo);
-	}
-	
 	public void setPosition(Location location) {
-		if (_loaded == false || modelInstance == null)
+		if (!_loaded || modelInstance == null)
 			return ;
 
 		if (start == null)
@@ -79,20 +61,13 @@ public class You {
 			p.x = (float) Territory.distanceAB(start, new CoordinateGPS(location.getLatitude(), start.longitude)) * 10 * (location.getLatitude() > start.latitude ? 1 : -1);
 			p.z = (float) Territory.distanceAB(start, new CoordinateGPS(start.latitude, location.getLongitude())) * 10 *(location.getLongitude() > start.longitude ? 1 : -1);
 			p.y = 0;
-			//p.x = (float) (location.getLongitude() - coordinate.longitude) * 5000;
-			//p.z = (float) (location.getLatitude() - coordinate.latitude) * 5000;
 			coordinate.latitude = location.getLatitude();
 			coordinate.longitude = location.getLongitude();
-			/*Log.d("galasky", "galasky Px " + p.x);
-			Log.d("galasky", "galasky Pz " + p.z);
-			Log.d("galasky", "galasky ");*/
-			//goTo(p);
 			modelInstance.transform.setTranslation(p);
-			
 			position.x = p.x;
 			position.y = p.y;
 			position.z = p.z;
-			Game3D.instance().loadPlate();
+            StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate));
 		}
 		else
 		{
@@ -100,14 +75,8 @@ public class You {
 			p.x = (float) Territory.distanceAB(start, new CoordinateGPS(location.getLatitude(), start.longitude)) * 10 * (location.getLatitude() > start.latitude ? 1 : -1);
 			p.z = (float) Territory.distanceAB(start, new CoordinateGPS(start.latitude, location.getLongitude())) * 10 *(location.getLongitude() > start.longitude ? 1 : -1);
 			p.y = 0;
-			//p.x = (float) (location.getLongitude() - coordinate.longitude) * 5000;
-			//p.z = (float) (location.getLatitude() - coordinate.latitude) * 5000;
 			coordinate.latitude = location.getLatitude();
 			coordinate.longitude = location.getLongitude();
-			/*Log.d("galasky", "galasky Px " + p.x);
-			Log.d("galasky", "galasky Pz " + p.z);
-			Log.d("galasky", "galasky ");*/
-			//modelInstance.transform.setTranslation(p);
 			if (steve != null)
 			{
 				steve.transform.setTranslation(p);

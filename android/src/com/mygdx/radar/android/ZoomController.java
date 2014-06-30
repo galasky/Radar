@@ -8,16 +8,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
 public class ZoomController {
-	private OrthographicCamera camera;
-	private SpriteBatch myBatch;
-	private Vector2	cursorA;
-	private Vector2 cursorB;
-	private	Vector2	cursor;
-	private boolean touch;
-	private float	len;
-	private float	direction;
-	private	int		position;
-	private ShapeRenderer shapeDebugger;
+	private OrthographicCamera  camera;
+	private SpriteBatch         myBatch;
+	private Vector2	            cursorA;
+	private Vector2             cursorB;
+	private	Vector2	            cursor;
+	private boolean             touch;
+	private float	            len;
+	private float	            direction;
+	private	int		            position;
+	private ShapeRenderer       shapeDebugger;
 	
 	public ZoomController() {
 		position = 0;
@@ -54,13 +54,13 @@ public class ZoomController {
 	public void touch(float x, float y, float deltaX, float deltaY) {
 		Vector2 v = new Vector2(x - cursor.x, y - cursor.y);
 		
-		if (v.len() <= 60) {
+		if (v.len() <= 60 && deltaY > 0) {
 			move(deltaX);
 		}
 	}
 	
 	private void update() {
-		if (touch == false)
+		if (!touch)
 		{
 			if (position == -1)
 				cursor.x += (direction < 0 ? -len / 50 : (Math.abs(cursor.x - cursorA.x) > 10 ? len / 50 : 0));

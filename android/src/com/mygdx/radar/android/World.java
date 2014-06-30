@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 
 public class World {
 	public  ArrayList<BubbleStop> 	listBubbleStop;
@@ -44,9 +43,8 @@ public class World {
             {
                 start = b.pAffichage.y;
             }
-            if (find == false && bubbleStop.station.distance < b.station.distance)
+            if (!find && bubbleStop.station.distance < b.station.distance)
             {
-                //ecart -= b.position.y;
                 bubbleStop.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400,  start + ecart));
                 listBubbleStop.add(i, bubbleStop);
                 find = true;

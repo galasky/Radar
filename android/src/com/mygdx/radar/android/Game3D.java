@@ -99,10 +99,6 @@ public class Game3D implements ApplicationListener {
         DetecteurGeste monDetecteurGeste = new DetecteurGeste();
 		Gdx.input.setInputProcessor(new GestureDetector (monDetecteurGeste));
     }
- 
-    public void loadPlate() {
-    	_plate.setListStop();
-    }
     
     public void longPress()
     {
