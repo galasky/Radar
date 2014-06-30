@@ -16,7 +16,7 @@ public class BubbleStop {
 	public Vector2		position;
 	//public List<StopTimes>	listStopTimes;
 	private Vector2		_direction;
-    private Vector2     pAffichage, pSave;
+    public Vector2      pAffichage, pSave;
 	public	float		slide;
 	public Station		station;
 	public int			order;
@@ -157,6 +157,10 @@ public class BubbleStop {
 			}
 		}
 	}
+
+    public void scroll(float deltaY) {
+        pAffichage.y -= deltaY * 2;
+    }
     public void render(GUIController guiController) {
         bd.fontNum.setColor(Color.WHITE);
         bd.myBatch.begin();

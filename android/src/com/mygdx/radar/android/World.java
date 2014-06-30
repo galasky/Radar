@@ -32,21 +32,27 @@ public class World {
         int i = 0;
         boolean find = false;
         float ecart = 0;
+        float start = Gdx.graphics.getHeight() - 185;
+
 
         while (i < listBubbleStop.size())
         {
             BubbleStop b = listBubbleStop.get(i);
+            if (i == 0)
+            {
+                start = b.pAffichage.y;
+            }
             if (find == false && bubbleStop.station.distance < b.station.distance)
             {
-
-                bubbleStop.setpAffichage(new Vector2(98, Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() - 1735) + ecart));
+                //ecart -= b.position.y;
+                bubbleStop.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400,  start + ecart));
                 listBubbleStop.add(i, bubbleStop);
                 find = true;
             }
 
             if (find)
             {
-                b.setpAffichage(new Vector2(98, Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() - 1735) + ecart));
+                b.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400, start + ecart));
             }
             ecart += (-73 - (b.station.stops.size()) * 76) - 10;
             i++;
@@ -54,7 +60,7 @@ public class World {
         }
         if (find)
             return ;
-        bubbleStop.setpAffichage(new Vector2(98, Gdx.graphics.getHeight() - (Gdx.graphics.getHeight() - 1735) + ecart));
+        bubbleStop.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400, start + ecart));
         listBubbleStop.add(bubbleStop);
     }
 }

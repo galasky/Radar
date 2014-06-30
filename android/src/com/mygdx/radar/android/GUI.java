@@ -107,6 +107,7 @@ public class GUI implements IGUI {
 		while (i.hasNext())
 		{
 			bubbleStop = i.next();
+            bubbleStop.scroll(deltaY);
 			if (bubbleStop.touch)
 			{
 				bubbleStop.move(deltaX, -deltaY);
@@ -137,11 +138,10 @@ public class GUI implements IGUI {
 	private void updateBubbleStop() {
 		if (_world.listBubbleStop == null)
 			return ;
-		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
 		BubbleStop bubbleStop = null;
-		while (i.hasNext())
+		for (int i = 0; i < _world.listBubbleStop.size(); i++)
 		{
-			bubbleStop = i.next();
+			bubbleStop = _world.listBubbleStop.get(i);
 			bubbleStop.update();
 		}
 	}
