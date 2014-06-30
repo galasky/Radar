@@ -104,7 +104,8 @@ public class GUIController {
 		
 		_spriteBatch.begin();
 		_font.draw(_spriteBatch, time.hours + ":" + (time.minutes < 10 ? "0" + time.minutes : time.minutes), Gdx.graphics.getWidth() - 130, Gdx.graphics.getHeight() - 40);
-		_spriteBatch.end();
+		//_font.draw(_spriteBatch, "x = " + World.instance().toto.x + "y = " + World.instance().toto.y, 40, 400);
+        _spriteBatch.end();
 		_gui.render();
 		_zoomController.render();
         menu.render();
@@ -116,6 +117,8 @@ public class GUIController {
 	}
 	
 	public void touch(float x, float y, float deltaX, float deltaY) {
+        World.instance().toto.x += deltaX;
+        World.instance().toto.y -= deltaY;
         menu.touch(x, y, deltaX, deltaY);
 		_gui.touch(x, y, deltaX, deltaY);
 		_zoomController.touch(x, y, deltaX, deltaY);

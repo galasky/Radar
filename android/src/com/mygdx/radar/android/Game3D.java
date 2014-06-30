@@ -5,11 +5,15 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.Material;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
+import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
@@ -59,12 +63,18 @@ public class Game3D implements ApplicationListener {
 	}
 	
     private void doneLoading() {
-    	
-        ModelInstance Steve = new ModelInstance(assets.get("data/steve/steve.obj", Model.class));
+
+        Texture floor = new Texture("texture/station.png");
+        Model model = modelBuilder.createBox(0.2f, 5f, .2f,
+                new Material(TextureAttribute.createDiffuse(floor)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+        ModelInstance modelInstance = new ModelInstance(model);
+        modelInstance.transform.setToTranslation(0, -1f, 0);
+        perso.add(modelInstance);
+/*        ModelInstance Steve = new ModelInstance(assets.get("data/steve/steve.obj", Model.class));
         //Steve.transform.setToRotation(Vector3.Z, 45);
         Steve.transform.scale(0.2f, 0.2f, 0.2f);
         You.instance().steve = Steve;
-        perso.add(Steve);
+        perso.add(Steve);*/
         loading = false;
     }
 	
@@ -84,6 +94,7 @@ public class Game3D implements ApplicationListener {
         environment.add(_light);
         _skyBox = new SkyBox(environment);
         _plate = new Plate(environment);
+        BubbleDrawer.instance();
         _guiController = new GUIController();
         DetecteurGeste monDetecteurGeste = new DetecteurGeste();
 		Gdx.input.setInputProcessor(new GestureDetector (monDetecteurGeste));
@@ -128,8 +139,10 @@ public class Game3D implements ApplicationListener {
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
         _skyBox.render();
         _plate.update();
+
     	modelBatch.begin(_cam.pCam);
     	
         modelBatch.render(instances);

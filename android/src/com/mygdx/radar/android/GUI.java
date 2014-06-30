@@ -2,6 +2,7 @@ package com.mygdx.radar.android;
 
 import android.widget.Button;
 
+import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -40,7 +41,8 @@ public class GUI implements IGUI {
 	private ShapeRenderer shapeDebugger;
 	private boolean				_initPosition;
     private GUIController       guiController;
-    private PushButton           _button;
+    private Color               green, orange, red, grey;
+    private MyFont              fontNum, fontStationName, fontWalk;
 
     public class ChangeFont implements IAction {
         public void exec() {
@@ -49,9 +51,16 @@ public class GUI implements IGUI {
     }
 
 	public GUI(GUIController gui) {
+        green = new Color().set(129 / 255f, 215 / 255f, 89 / 255f, 1f);
+        orange = new Color().set(230 / 255f, 163 / 255f, 64 / 255f, 1f);
+        red = new Color().set(210 / 255f, 90 / 255f, 87 / 255f, 1f);
+        grey = new Color().set(83 / 255f, 88 / 255f, 95 / 255f, 1f);
+        fontNum = FontManager.instance()._listFont.get(1);
+        fontNum = new MyFont("font/HelveticaNeueCondensedBold.ttf", 48);
+        fontStationName = new MyFont("font/HelveticaNeue.ttf", 48);
+        fontWalk = new MyFont("font/HelveticaNeueBold.ttf", 48);
         toto = new Vector2(300, 50);
         guiController = gui;
-        _button = new PushButton(new ChangeFont(), "Change Font", new Vector2(20, 50));
         texture = new Texture(Gdx.files.internal("texture/bus.png"));
         tWalking = new Texture(Gdx.files.internal("texture/walking-green.png"));
         // setting a filter is optional, default = Nearest
@@ -63,8 +72,8 @@ public class GUI implements IGUI {
         sprite = new Sprite(texture);
         sWalking = new Sprite(tWalking);
         //sprite.setOrigin(texture.getWidth() / 2, texture.getHeight() / 2);
-        sprite.setSize(100, 100);
-        sWalking.setSize(30, 50);
+        sprite.setSize(64, 64);
+        sWalking.setSize(40, 60);
 		StationManager.instance().endDraw = true;
 		shapeDebugger = new ShapeRenderer();
 		_str = new String();
@@ -96,6 +105,7 @@ public class GUI implements IGUI {
 		while (i.hasNext())
 		{
 			bubbleStop = i.next();
+            bubbleStop.scroll(deltaY);
 			if (bubbleStop.touch)
 			{
 				bubbleStop.move(deltaX, -deltaY);
@@ -126,11 +136,10 @@ public class GUI implements IGUI {
 	private void updateBubbleStop() {
 		if (_world.listBubbleStop == null)
 			return ;
-		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
 		BubbleStop bubbleStop = null;
-		while (i.hasNext())
+		for (int i = 0; i < _world.listBubbleStop.size(); i++)
 		{
-			bubbleStop = i.next();
+			bubbleStop = _world.listBubbleStop.get(i);
 			bubbleStop.update();
 		}
 	}
@@ -154,69 +163,7 @@ public class GUI implements IGUI {
 	}
 	
 	private void renderSelect() {
-
-		myBatch.begin();
-		Gdx.gl20.glLineWidth(10);
-		
-		//Enable transparency
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		    
-		shapeDebugger.setProjectionMatrix(guiController.camera.combined);
-	    shapeDebugger.begin(ShapeType.Line);
-	    shapeDebugger.setColor(0f, 0f, 0f, 1f);
-	    shapeDebugger.end();
-	    shapeDebugger.begin(ShapeType.Filled);
-	    shapeDebugger.rect(_bubbleSelect.position.x - Gdx.graphics.getWidth() / 2 - 160, _bubbleSelect.position.y - Gdx.graphics.getHeight() / 2 + 20, 800,  -(_bubbleSelect.station.stops.size() + 5.5f)* _bubbleSelect.slide);
-	    shapeDebugger.end();
-	    myBatch.end();
-	    
-	/*	myBatch.begin();
-		Gdx.gl20.glLineWidth(20);
-		
-		//Enable transparency
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-		    
-		shapeDebugger.setProjectionMatrix(MyCamera.instance().pCam.combined);
-	    shapeDebugger.begin(ShapeType.Line);
-	    shapeDebugger.setColor(1f, 1f, 1f, 0.80f);
-	    Vector3 A = new Vector3(_bubbleSelect.station.position.y, 0.8f, _bubbleSelect.station.position.x);
-	    Vector3 B = MyCamera.instance().transorm(_bubbleSelect.position);
-	    
-	    shapeDebugger.line(A, B);
-	    shapeDebugger.end();
-	    myBatch.end();*/
-	    
-	    Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
-
-		_spriteBatch.begin();
-		Date d = new Date();
-		_font.draw(_spriteBatch, _bubbleSelect.station.name, _bubbleSelect.position.x - 138, _bubbleSelect.position.y);
-        _font.draw(_spriteBatch, toto.x + " " + 79, 400, 400);
-        _font.draw(_spriteBatch,(int) (_bubbleSelect.station.distanceTemps * 60) + " min", _bubbleSelect.position.x + 311, _bubbleSelect.position.y);
-        sWalking.setPosition(_bubbleSelect.position.x + 266, _bubbleSelect.position.y - 35);
-        sWalking.draw(_spriteBatch);
-
-        Iterator<Stop> i = _bubbleSelect.station.stops.iterator();
-		int nb = 0;
-		while (i.hasNext())
-		{
-			Stop stop = i.next();
-			nb++;
-                sprite.setPosition(_bubbleSelect.position.x - 150, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79) - 75);
-                sprite.draw(_spriteBatch);
-                MyFont fontNum = FontManager.instance()._listFont.get(1);
-                fontNum.draw(_spriteBatch, "2", _bubbleSelect.position.x, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "DEST", _bubbleSelect.position.x + 57, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 1 ? "-" : stop.list_time.get(0).diff(new Date())), _bubbleSelect.position.x + 258, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-				_font.draw(_spriteBatch, "" + (stop.list_time.size() < 2 ? "-" : stop.list_time.get(1).diff(new Date())), _bubbleSelect.position.x + 377, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-                _font.draw(_spriteBatch, "" + (stop.list_time.size() < 3 ? "-" : stop.list_time.get(2).diff(new Date())), _bubbleSelect.position.x + 377 + 377 - 258, _bubbleSelect.position.y - nb * (_bubbleSelect.slide + 79));
-
-		}
-		_spriteBatch.end();
+        _bubbleSelect.render(guiController);
 		
 		if (_bubbleSelect.select == false && _bubbleSelect.slide <= 0)
 			_bubbleSelect = null;
@@ -226,12 +173,19 @@ public class GUI implements IGUI {
 		if (_initPosition == true)
 			initPosition();
 		updateBubbleStop();
-		
-		if (_bubbleSelect == null)
-			renderAll();
-		else
-			renderSelect();
-        _button.draw();
+
+        if (World.instance().listBubbleStop != null)
+        {
+           // Iterator<BubbleStop> it = World.instance().listBubbleStop.iterator();
+            int i = 0;
+
+            while (i < World.instance().listBubbleStop.size())
+            {
+                BubbleStop b = World.instance().listBubbleStop.get(i);
+                b.render(guiController);
+                i++;
+            }
+        }
 	}
 
     public void changeFont() {
@@ -241,16 +195,6 @@ public class GUI implements IGUI {
 	@Override
 	public void tap(float x, float y) {
 
-        if (_button.colision(x, y))
-        {
-            i++;
-            if (i >= _listFont.size())
-                i = 0;
-
-            _font = _listFont.get(i);
-            _button.setSelect(_font.font);
-            return ;
-        }
 		if (_world.listBubbleStop == null)
 			return ;
 		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
