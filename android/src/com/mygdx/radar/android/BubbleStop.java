@@ -159,7 +159,7 @@ public class BubbleStop {
 	}
 
     public void scroll(float deltaY) {
-        pAffichage.y -= deltaY * 2;
+        pAffichage.y -= deltaY;
     }
 
     public void render(GUIController guiController) {

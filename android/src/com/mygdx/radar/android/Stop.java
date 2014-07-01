@@ -21,9 +21,9 @@ public class Stop {
     public String location_type;
     public String parent_station;
     public String stop_timezone;
-    public String wheelchair_boarding;
-    public ArrayList<String> list_trip;
-    public List<MyTimes>    list_time;
+    public String               wheelchair_boarding;
+    public ArrayList<String>    list_trip;
+    public List<MyTimes>        list_time;
 
     public CoordinateGPS coord = new CoordinateGPS();
 

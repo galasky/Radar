@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 public class World {
 	public  ArrayList<BubbleStop> 	listBubbleStop;
+    public  HashMap<String, Stop>   mapStop;
 	public	LoadListStop			loadListStop;
     public  HashMap<String, Route>       routes;
     public Vector2 toto;
@@ -17,6 +18,7 @@ public class World {
         listBubbleStop = null;
         loadListStop = new LoadListStop();
         routes = new HashMap<String, Route>();
+        mapStop = new HashMap<String, Stop>();
 	}
 	
 	public static World instance() {

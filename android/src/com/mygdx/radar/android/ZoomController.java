@@ -1,11 +1,15 @@
 package com.mygdx.radar.android;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
+
+import java.util.TimerTask;
 
 public class ZoomController {
 	private OrthographicCamera  camera;
@@ -18,8 +22,10 @@ public class ZoomController {
 	private float	            direction;
 	private	int		            position;
 	private ShapeRenderer       shapeDebugger;
+    private LoadStation         loadStation;
 	
 	public ZoomController() {
+        loadStation = new LoadStation();
 		position = 0;
 		direction = 0;
 		int w = Gdx.graphics.getWidth();
@@ -58,7 +64,17 @@ public class ZoomController {
 			move(deltaX);
 		}
 	}
-	
+
+    TimerTask task = new TimerTask()
+    {
+        @Override
+        public void run()
+        {
+            StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate));
+            //_gui.refresh();
+        }
+    };
+
 	private void update() {
 		if (!touch)
 		{
@@ -68,22 +84,36 @@ public class ZoomController {
 				{
 					cursor.x = (cursorA.x + cursorB.x) / 2;
 					direction = 0;
-					position = 1;
-					MyCamera.instance().zoomTo(20);
+					if (position != 1) {
+                        Config.instance().distance = Config.instance().distance2;
+                        new LoadStation().start();
+                        MyCamera.instance().zoomTo(20);
+                    }
+                    position = 1;
 				}
 			if (cursor.x > cursorB.x)
 			{
 				cursor.x = cursorB.x;
 				direction = 0;
-				position = 2;
-				MyCamera.instance().zoomTo(26);
+                if (position != 2)
+                {
+                    Config.instance().distance = Config.instance().distance3;
+                    new LoadStation().start();
+                    MyCamera.instance().zoomTo(26);
+                }
+                position = 2;
 			}
 			if (cursor.x <= cursorA.x)
 			{
 				cursor.x = cursorA.x;
 				direction = 0;
-				position = 0;
-				MyCamera.instance().zoomTo(10);
+                if (position != 0) {
+                    Config.instance().distance = Config.instance().distance1;
+                    loadStation.interrupt();
+                    new LoadStation().start();
+                    MyCamera.instance().zoomTo(10);
+                }
+                position = 0;
 			}
 		}
 

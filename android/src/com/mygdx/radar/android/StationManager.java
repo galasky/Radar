@@ -46,36 +46,45 @@ public class StationManager {
 	public boolean loadFinish() {
 		return _loadFinish;
 	}
-	
+
+    public boolean stopExist(Stop stop) {
+        return (World.instance().mapStop.get(stop.stop_id) != null);
+    }
+
 	public void add(List<Stop> listStop) {
 		Iterator<Stop> i = listStop.iterator();
 		listStation = new ArrayList<Station>();
+        Log.d("ok", "galasky " + listStop.size());
 		while (i.hasNext())
 		{
 			Stop stop = i.next();
-			Station station = new Station();
-			
-			station.stops.add(stop);
-			station.name = stop.stop_name;
-			station.coord = stop.coord;
-			i.remove();
-			Iterator<Stop> u = listStop.iterator();
-			while (u.hasNext())
-			{
-				Stop stop2 = u.next();
-				if (Territory.distanceAB(station.coord, stop2.coord) <= 0.05)
-				{
-					station.stops.add(stop2);
-					u.remove();
-					i = listStop.iterator();
-				}
-			}
-			station.moyCoord();
-			station.getListStopTimes();
-			listStation.add(station);
-			loadInstance(station);
-			loadBubble(station);
-			//Log.d("galasky", "galasky ADD STATION IN LISTSTATION");
+            if (!stopExist(stop))
+            {
+                Log.d("ok", "galasky stop " + stop.stop_id);
+                World.instance().mapStop.put(stop.stop_id, stop);
+                Station station = new Station();
+                station.stops.add(stop);
+                station.name = stop.stop_name;
+                station.coord = stop.coord;
+                i.remove();
+                Iterator<Stop> u = listStop.iterator();
+                while (u.hasNext())
+                {
+                    Stop stop2 = u.next();
+                    if (Territory.distanceAB(station.coord, stop2.coord) <= 0.05)
+                    {
+                        World.instance().mapStop.put(stop2.stop_id, stop2);
+                        station.stops.add(stop2);
+                        u.remove();
+                        i = listStop.iterator();
+                    }
+                }
+                station.moyCoord();
+                station.getListStopTimes();
+                listStation.add(station);
+                loadInstance(station);
+                loadBubble(station);
+            }
 		}
 		_loadFinish = true;
 	}

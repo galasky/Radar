@@ -4,12 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
-public class DetecteurGeste implements GestureListener {
+import java.util.Timer;
+import java.util.TimerTask;
 
+public class DetecteurGeste implements GestureListener {
+    private  Timer timer;
 	private boolean ok;
 	
 	public DetecteurGeste() {
-		ok = false;
+        ok = false;
+        timer = new Timer();
 	}
 	
     @Override
@@ -36,10 +40,12 @@ public class DetecteurGeste implements GestureListener {
 		return false;
 	}
 
+
+
 	@Override
 	public boolean longPress(float x, float y) {
 		// TODO Auto-generated method stub
-		//Game3D.instance().longPress();
+
 		return false;
 	}
 

@@ -47,8 +47,9 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
 
-        if (World.instance().loadListStop.loaded == false)
+        if (World.instance().loadListStop.loaded == false) {
             World.instance().loadListStop.location = location;
+        }
         else
             You.instance().setPosition(location);
     }
