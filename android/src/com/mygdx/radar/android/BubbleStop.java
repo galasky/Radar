@@ -31,13 +31,16 @@ public class BubbleStop {
     private BubbleDrawer    bd;
 	private SoundManager	soundManager;
 	//public float		distanceTemps;
-	private Vector2		_goTo;
+
+    private You         _you;
+
+    private Vector2		_goTo;
 
 	
 	public BubbleStop(Station s) {
 
         bd = BubbleDrawer.instance();
-
+        _you = You.instance();
         pAffichage = null;
         pSave = null;
 		soundManager = SoundManager.instance();
@@ -109,6 +112,8 @@ public class BubbleStop {
 	}
 	
 	public void update() {
+
+
 
         station.update();
 		if (_goTo != null)

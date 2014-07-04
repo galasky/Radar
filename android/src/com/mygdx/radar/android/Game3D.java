@@ -1,10 +1,15 @@
 package com.mygdx.radar.android;
 
 
+import android.util.Log;
+
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -15,16 +20,19 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
+import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.UBJsonReader;
 
 public class Game3D implements ApplicationListener {
 	private MyCamera				_cam;
-	private SkyBox					_skyBox;
+	//private SkyBox				_skyBox;
 	public ModelBuilder 			modelBuilder;
     private Plate					_plate;
+    private float toto;
     private	GUIController			_guiController;
     public CameraInputController	camController;
     private DirectionalLight		_light;
@@ -34,11 +42,15 @@ public class Game3D implements ApplicationListener {
     public boolean 					loading;
     public Array<ModelInstance>		instances;
     public Array<ModelInstance>		perso;
+    public ModelInstance            instanceSky;
+    public Model                    model, modelStation, modelSky;
     private long 					diff, start;
     
     private Game3D() {
-    	start = System.currentTimeMillis(); 
+        toto = 1;
+    	start = System.currentTimeMillis();
     	loading = false;
+        modelStation = null;
     }
     
 	public static Game3D instance() {
@@ -51,12 +63,14 @@ public class Game3D implements ApplicationListener {
 	
 	public void loadSound() {
 		SoundManager soundManager = SoundManager.instance();
-		
 		soundManager.load("pop.mp3");
 	}
 	
 	public void loadModel() {
-		assets.load("data/steve/steve.obj", Model.class);
+
+
+
+			assets.load("data/steve/steve.obj", Model.class);
 		//assets.load("data/steve/steve.obj", Model.class);
 		//assets.load("data/zombie/zombie.obj", Model.class);
 		loading = true;
@@ -64,17 +78,38 @@ public class Game3D implements ApplicationListener {
 	
     private void doneLoading() {
 
-        Texture floor = new Texture("texture/station.png");
-        Model model = modelBuilder.createBox(0.2f, 5f, .2f,
-                new Material(TextureAttribute.createDiffuse(floor)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+        // A ModelBatch is like a SpriteBatch, just for models.  Use it to batch up geometry for OpenGL
+        modelBatch = new ModelBatch();
+
+        // Model loader needs a binary json reader to decode
+        UBJsonReader jsonReader = new UBJsonReader();
+        // Create a model loader passing in our json reader
+        G3dModelLoader modelLoader = new G3dModelLoader(jsonReader);
+        // Now load the model by name
+        // Note, the model (g3db file ) and textures need to be added to the assets folder of the Android proj
+
+        model = modelLoader.loadModel(Gdx.files.getFileHandle("data/you/you.g3db", Files.FileType.Internal));
+        modelStation = modelLoader.loadModel(Gdx.files.getFileHandle("data/station/station.g3db", Files.FileType.Internal));
+        /*modelSky = modelLoader.loadModel(Gdx.files.getFileHandle("data/sky/sky_v2.g3db", Files.FileType.Internal));
+
+        Pixmap _pixmap = new Pixmap(50, 50, Pixmap.Format.RGBA8888);
+        _pixmap.setColor(Color.BLUE);
+        _pixmap.fillRectangle(0, 0, 50, 50);
+        Texture _pixmapTexture = new Texture(_pixmap, Pixmap.Format.RGB888, false);
+        modelSky = modelBuilder.createCylinder(4f, 6f, 4f, 16,
+                new Material(TextureAttribute.createDiffuse(_pixmapTexture)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+        instanceSky = new ModelInstance(modelSky);
+        perso.add(instanceSky);*/
+
+
+        // Now create an instance.  Instance holds the positioning data, etc of an instance of your model
         ModelInstance modelInstance = new ModelInstance(model);
-        modelInstance.transform.setToTranslation(0, -1f, 0);
+        modelInstance.transform.setToTranslation(0, .23f, 0);
+        modelInstance.transform.scale(0.5f, 0.5f, 0.5f);
         perso.add(modelInstance);
-/*        ModelInstance Steve = new ModelInstance(assets.get("data/steve/steve.obj", Model.class));
-        //Steve.transform.setToRotation(Vector3.Z, 45);
-        Steve.transform.scale(0.2f, 0.2f, 0.2f);
-        You.instance().steve = Steve;
-        perso.add(Steve);*/
+
+
+
         loading = false;
     }
 	
@@ -92,12 +127,13 @@ public class Game3D implements ApplicationListener {
     	environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(_light);
-        _skyBox = new SkyBox(environment);
+        //_skyBox = new SkyBox(environment);
         _plate = new Plate(environment);
         BubbleDrawer.instance();
         _guiController = new GUIController();
         DetecteurGeste monDetecteurGeste = new DetecteurGeste();
 		Gdx.input.setInputProcessor(new GestureDetector (monDetecteurGeste));
+        modelBuilder = new ModelBuilder();
     }
     
     public void longPress()
@@ -106,6 +142,9 @@ public class Game3D implements ApplicationListener {
     }
 
     public void	touchScreen(float x, float y, float deltaX, float deltaY) {
+        //toto += deltaX / 1000;
+        //Log.d("ok", "galasky toto = " + toto);
+        //instanceSky.transform.scale(toto, toto, toto);
     	_guiController.touch(x, y, deltaX, deltaY);
     }
     
@@ -134,9 +173,10 @@ public class Game3D implements ApplicationListener {
         _cam.update();
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        Gdx.graphics.getGL20().glClearColor(147 / 255f, 199 / 255f, 255 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
-        _skyBox.render();
+        //_skyBox.render();
         _plate.update();
 
     	modelBatch.begin(_cam.pCam);
@@ -147,10 +187,12 @@ public class Game3D implements ApplicationListener {
         _guiController.render();
         sleep(60);
     }
-     
+
     @Override
     public void dispose () {
-    	modelBatch.dispose();
+    	model.dispose();
+        modelStation.dispose();
+        modelBatch.dispose();
     }
  
     public void resume () {

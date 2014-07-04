@@ -60,18 +60,19 @@ public class StationManager {
 			Stop stop = i.next();
             if (!stopExist(stop))
             {
-                Log.d("ok", "galasky stop " + stop.stop_id);
+
                 World.instance().mapStop.put(stop.stop_id, stop);
                 Station station = new Station();
                 station.stops.add(stop);
                 station.name = stop.stop_name;
                 station.coord = stop.coord;
+                station.distanceAffichage = Config.instance().distance;
                 i.remove();
                 Iterator<Stop> u = listStop.iterator();
                 while (u.hasNext())
                 {
                     Stop stop2 = u.next();
-                    if (Territory.distanceAB(station.coord, stop2.coord) <= 0.05)
+                    if (Territory.distanceAB(station.coord, stop2.coord) <= Config.instance().distanceStation)
                     {
                         World.instance().mapStop.put(stop2.stop_id, stop2);
                         station.stops.add(stop2);
@@ -90,23 +91,24 @@ public class StationManager {
 	}
 	
 	public void loadInstance(Station station) {
-        ModelBuilder modelBuilder = new ModelBuilder();
+  //      ModelBuilder modelBuilder = new ModelBuilder();
 
 		Vector3 decal = new Vector3();
 
-        Texture tstation = new Texture("texture/info_icon.png");
-        Model model = modelBuilder.createBox(0.5f, 2f, .01f,
-                new Material(TextureAttribute.createDiffuse(tstation)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
+//        Texture tstation = new Texture("texture/info_icon.png");
+        //Model model = modelBuilder.createBox(0.5f, 2f, .01f, new Material(TextureAttribute.createDiffuse(tstation)), VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates);
 
         //model = Game3D.instance().assets.get("data/steve/steve.obj", Model.class);
     	decal.x = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(station.coord.latitude, _you.coordinate.longitude)) * 10 * (station.coord.latitude > _you.coordinate.latitude ? 1 : -1);
     	decal.z = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(_you.coordinate.latitude, station.coord.longitude)) * 10 *(station.coord.longitude > _you.coordinate.longitude ? 1 : -1);
-        ModelInstance instance = new ModelInstance(model);
+        ModelInstance instance = new ModelInstance(Game3D.instance().modelStation);
 	    station.position.x = decal.z;
 	    station.position.y = decal.x;
+        Log.d("ok", "galasky distance reel = " + (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(station.coord.latitude, station.coord.longitude)) + " distance gdx = " + Math.sqrt(decal.x * decal.x + decal.z * decal.z));
 	    station.instance = instance;
-	    station.instance.transform.setTranslation(decal.x, 1, decal.z);
-	    //station.instance.transform.scale(0.1f, 0.1f, 0.1f);
+	    station.instance.transform.setTranslation(decal.x, 0.23f, decal.z);
+	    station.instance.transform.scale(0.35f, 0.35f, 0.35f);
+        station.instance.transform.rotate(new Vector3(0, 1, 0), 95);
 	    Game3D.instance().instances.add(instance);
 	}
 	

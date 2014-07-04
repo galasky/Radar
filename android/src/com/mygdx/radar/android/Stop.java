@@ -32,7 +32,7 @@ public class Stop {
     }
 
     public void	getListStopTimes() {
-    	listStopTimes = null;//Territory.instance().getListStopTimesByStopId(stop_id);
+    	listStopTimes = Territory.instance().getListStopTimesByStopId(stop_id);
         list_time = null;
         initListTime();
     }

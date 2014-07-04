@@ -29,8 +29,8 @@ public class GUI implements IGUI {
 	private	World				_world;
     private Sprite              sprite;
     private Vector2             toto;
-    private Texture texture;
-	private SpriteBatch myBatch;
+    private Texture             texture;
+	private SpriteBatch         myBatch;
 	private Vector3 			V;
 	private double				k;
 	private String				_str;
@@ -38,7 +38,7 @@ public class GUI implements IGUI {
     private Texture             tWalking;
     private Sprite              sWalking;
 	private BubbleStop			_bubbleSelect;
-	private ShapeRenderer shapeDebugger;
+	private ShapeRenderer       shapeDebugger;
 	private boolean				_initPosition;
     private GUIController       guiController;
     private Color               green, orange, red, grey;
@@ -46,7 +46,6 @@ public class GUI implements IGUI {
 
     public class ChangeFont implements IAction {
         public void exec() {
-
         }
     }
 
@@ -182,7 +181,7 @@ public class GUI implements IGUI {
             while (i < World.instance().listBubbleStop.size())
             {
                 BubbleStop b = World.instance().listBubbleStop.get(i);
-                if (b.position.y > 400 && b.position.y < Gdx.graphics.getHeight())
+                if (b.position.y > 0 && b.position.y < Gdx.graphics.getHeight() && Config.instance().distance >= b.station.distanceAffichage)
                     b.render(guiController);
                 i++;
             }

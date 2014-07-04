@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.TimerTask;
 
+// In GUIController class
 public class ZoomController {
 	private OrthographicCamera  camera;
 	private SpriteBatch         myBatch;
@@ -31,8 +32,8 @@ public class ZoomController {
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
 		touch = false;
-		cursorA = new Vector2(w / 3, h - h / 8);
-		cursorB = new Vector2(2 * w / 3, h - h / 8);
+		cursorA = new Vector2(w / 3, h - h / 9);
+		cursorB = new Vector2(2 * w / 3, h - h / 9);
 		len = new Vector2(cursorA.x - cursorB.x, cursorA.y - cursorB.y).len();
 		cursor = new Vector2(cursorA);
 		camera = new OrthographicCamera(w, h);
@@ -60,20 +61,10 @@ public class ZoomController {
 	public void touch(float x, float y, float deltaX, float deltaY) {
 		Vector2 v = new Vector2(x - cursor.x, y - cursor.y);
 		
-		if (v.len() <= 60 && deltaY > 0) {
+		if (v.len() <= 200 && deltaY > 0) {
 			move(deltaX);
 		}
 	}
-
-    TimerTask task = new TimerTask()
-    {
-        @Override
-        public void run()
-        {
-            StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate));
-            //_gui.refresh();
-        }
-    };
 
 	private void update() {
 		if (!touch)

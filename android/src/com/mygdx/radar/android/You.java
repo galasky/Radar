@@ -2,6 +2,9 @@ package com.mygdx.radar.android;
 
 import android.location.Location;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g3d.Material;
@@ -9,6 +12,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 
 
@@ -20,8 +24,18 @@ public class You {
 	private ModelBuilder 	modelBuilder;
 	public CoordinateGPS	start;
 	public ModelInstance	steve;
+    private Pixmap          _pixmap;
+    private Texture         _pixmapTexture;
+    private int             _x  = 0;
+    private int             _y  = 0;
+    private float           _w;
+    private float           _h;
+    private int             _width;
+    private int             _height;
 
     private	You() {
+        _width = 2000;
+        _height = 2000;
 		modelBuilder = new ModelBuilder();
 		position = new Vector3(0, 0, 0);
 		_loaded = true;
@@ -40,15 +54,51 @@ public class You {
 	
 	public void load() {
     	Model model;
-        
-        Texture floor = new Texture("data/cadrillage.png");
+        _pixmap = new Pixmap(_width, _height, Pixmap.Format.RGBA8888);
+        _pixmap.setColor(BubbleDrawer.instance().blue);
+        _pixmap.fillRectangle(0, 0, _width, _height);
+
+        _pixmapTexture = new Texture(_pixmap, Pixmap.Format.RGB888, false);
+
+        //Texture floor = new Texture("data/cadrillage.png");
       	model = modelBuilder.createBox(50f, .5f, 50f, 
-      	new Material(TextureAttribute.createDiffuse(floor)), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
+      	new Material(TextureAttribute.createDiffuse(_pixmapTexture)), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
       	modelInstance = new ModelInstance(model);
       	modelInstance.transform.setToTranslation(0, -1f, 0);
+        updateFloor();
        	_loaded = true;
 	}
-	
+
+    class toto extends Thread {
+        @Override
+        public void run() {
+
+        }
+    }
+
+    public void updateFloor() {
+        _pixmap.setColor(Color.GREEN);
+        for (int i = 0; i < 40; i++)
+            _pixmap.drawPixel(_width / 2, _width / 2 + i);
+        _pixmap.setColor(Color.RED);
+        for (int i = 0; i < 40; i++)
+            _pixmap.drawPixel(_height / 2 + i, _height / 2);
+
+
+
+        for (int i = 10; i > 0; i--) {
+            if (i % 2 == 0)
+                _pixmap.setColor(BubbleDrawer.instance().green);
+            else
+                _pixmap.setColor(BubbleDrawer.instance().grey);
+            _pixmap.fillCircle(_width / 2, _height / 2, 40 * i);
+        }
+        Texture _pixmapTexture = new Texture(_pixmap, Pixmap.Format.RGB888, false);
+
+        TextureAttribute attr = TextureAttribute.createDiffuse(_pixmapTexture);
+        You.instance().modelInstance.materials.get(0).set(attr);
+    }
+
 	public void setPosition(Location location) {
 		if (!_loaded || modelInstance == null)
 			return ;
@@ -77,14 +127,16 @@ public class You {
 			p.y = 0;
 			coordinate.latitude = location.getLatitude();
 			coordinate.longitude = location.getLongitude();
-			if (steve != null)
-			{
-				steve.transform.setTranslation(p);
-			}
-			
-			position.x = p.x;
-			position.y = p.y;
-			position.z = p.z;
+            /*if (World.instance().listBubbleStop != null) {
+                for (int i = 0; i < World.instance().listBubbleStop.size(); i++) {
+                    BubbleStop b = World.instance().listBubbleStop.get(i);
+                    b.station.refreshInstance();
+                }
+            }*/
+
+			//position.x = p.x;
+			//position.y = p.y;
+			//position.z = p.z;
 		}
 	}
 	

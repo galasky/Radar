@@ -18,7 +18,7 @@ public class BubbleDrawer {
     public Sprite          sWalking;
     public MyFont          fontNum, fontStationName, fontWalk;
     public SpriteBatch     myBatch;
-    public Color           green, orange, red, grey;
+    public Color           green, orange, red, grey, blue;
     public Sprite           sprite;
     public MyFont           _font;
     public Texture          texture;
@@ -30,10 +30,11 @@ public class BubbleDrawer {
         myBatch = new SpriteBatch();
         shapeDebugger = new ShapeRenderer();
         _spriteBatch = new SpriteBatch();
-        green = new Color().set(129 / 255f, 215 / 255f, 89 / 255f, 1f);
-        orange = new Color().set(230 / 255f, 163 / 255f, 64 / 255f, 1f);
-        red = new Color().set(210 / 255f, 90 / 255f, 87 / 255f, 1f);
-        grey = new Color().set(83 / 255f, 88 / 255f, 95 / 255f, 1f);
+        green = new Color().set(129 / 255f, 215 / 255f, 89 / 255f, 1);
+        orange = new Color().set(230 / 255f, 163 / 255f, 64 / 255f, 1);
+        red = new Color().set(210 / 255f, 90 / 255f, 87 / 255f, 1);
+        grey = new Color().set(83 / 255f, 88 / 255f, 95 / 255f, 1);
+        blue = new Color().set(147 / 255f, 199 / 255f, 255 / 255f, 1);
         tWalking = new Texture(Gdx.files.internal("texture/walking-green.png"));
         tWalking.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
         sWalking = new Sprite(tWalking);

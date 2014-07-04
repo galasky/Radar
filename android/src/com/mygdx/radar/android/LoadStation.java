@@ -10,6 +10,8 @@ public class LoadStation extends Thread {
 
     @Override
     public void run() {
+        while (Game3D.instance().modelStation == null)
+            ;
         StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate));
     }
 }

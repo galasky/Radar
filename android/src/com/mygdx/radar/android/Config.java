@@ -5,8 +5,10 @@ public class Config {
 	public float	distance, distance1, distance2, distance3;
     public int      timeRed;
     public int      timeOrange;
+    public float    distanceStation;
 
     private Config() {
+        distanceStation = 0.05f;
         timeRed = 0;
     	timeOrange = 3;
         distance1 = .5f;
