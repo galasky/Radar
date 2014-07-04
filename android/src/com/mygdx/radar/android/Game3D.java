@@ -9,6 +9,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes;
@@ -23,7 +24,9 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.loader.G3dModelLoader;
 import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.input.GestureDetector;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.UBJsonReader;
 
@@ -32,7 +35,7 @@ public class Game3D implements ApplicationListener {
 	//private SkyBox				_skyBox;
 	public ModelBuilder 			modelBuilder;
     private Plate					_plate;
-    private float toto;
+    private float                   toto, tata;
     private	GUIController			_guiController;
     public CameraInputController	camController;
     private DirectionalLight		_light;
@@ -40,17 +43,22 @@ public class Game3D implements ApplicationListener {
     public ModelBatch 				modelBatch;
     public Environment 				environment;
     public boolean 					loading;
+    public OrthographicCamera camera;
     public Array<ModelInstance>		instances;
     public Array<ModelInstance>		perso;
+    public ModelInstance            modelInstance;
     public ModelInstance            instanceSky;
+    private BubbleDrawer    bd;
     public Model                    model, modelStation, modelSky;
     private long 					diff, start;
     
     private Game3D() {
+        tata = 1;
         toto = 1;
     	start = System.currentTimeMillis();
     	loading = false;
         modelStation = null;
+        model = null;
     }
     
 	public static Game3D instance() {
@@ -88,8 +96,8 @@ public class Game3D implements ApplicationListener {
         // Now load the model by name
         // Note, the model (g3db file ) and textures need to be added to the assets folder of the Android proj
 
-        model = modelLoader.loadModel(Gdx.files.getFileHandle("data/you/you.g3db", Files.FileType.Internal));
-        modelStation = modelLoader.loadModel(Gdx.files.getFileHandle("data/station/station.g3db", Files.FileType.Internal));
+        model = modelLoader.loadModel(Gdx.files.getFileHandle("data/you/newcoq.g3db", Files.FileType.Internal));
+        modelStation = modelLoader.loadModel(Gdx.files.getFileHandle("data/station/pannel_v2.g3db", Files.FileType.Internal));
         /*modelSky = modelLoader.loadModel(Gdx.files.getFileHandle("data/sky/sky_v2.g3db", Files.FileType.Internal));
 
         Pixmap _pixmap = new Pixmap(50, 50, Pixmap.Format.RGBA8888);
@@ -103,18 +111,18 @@ public class Game3D implements ApplicationListener {
 
 
         // Now create an instance.  Instance holds the positioning data, etc of an instance of your model
-        ModelInstance modelInstance = new ModelInstance(model);
-        modelInstance.transform.setToTranslation(0, .23f, 0);
-        modelInstance.transform.scale(0.5f, 0.5f, 0.5f);
+        modelInstance = new ModelInstance(model);
+        modelInstance.transform.setToTranslation(0, .5f, 0);
+        modelInstance.transform.scale(0.3f, 0.3f, 0.3f);
         perso.add(modelInstance);
-
-
 
         loading = false;
     }
 	
     @Override
     public void create () {
+        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        bd = BubbleDrawer.instance();
     	instances = new Array<ModelInstance>();
     	perso = new Array<ModelInstance>();
     	assets = new AssetManager();
@@ -142,8 +150,18 @@ public class Game3D implements ApplicationListener {
     }
 
     public void	touchScreen(float x, float y, float deltaX, float deltaY) {
-        //toto += deltaX / 1000;
-        //Log.d("ok", "galasky toto = " + toto);
+       /* tata += deltaY / 10;
+        Log.d("ok", "galasky toto = " + toto +  " tata = " + tata);
+
+        modelInstance.transform.setToTranslation(0, tata, 0);
+        modelInstance.transform.scale(0.3f, 0.3f, 0.3f);*/
+        /*for (int i = 0; i < World.instance().listBubbleStop.size(); i++)
+        {
+            Station station = World.instance().listBubbleStop.get(i).station;
+            station.instance.transform.setToTranslation(station.position.y, toto, station.position.x);
+            station.instance.transform.scale(0.35f, 0.35f, 0.35f);
+            station.instance.transform.rotate(new Vector3(0, 1, 0), tata);
+        }*/
         //instanceSky.transform.scale(toto, toto, toto);
     	_guiController.touch(x, y, deltaX, deltaY);
     }
@@ -175,6 +193,16 @@ public class Game3D implements ApplicationListener {
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.graphics.getGL20().glClearColor(147 / 255f, 199 / 255f, 255 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
+
+        /*bd.myBatch.begin();
+        bd.shapeDebugger.setProjectionMatrix(camera.combined);
+        bd.shapeDebugger.begin(ShapeRenderer.ShapeType.Filled);
+        bd.shapeDebugger.setColor(bd.blue);
+        bd.shapeDebugger.rect(Gdx.graphics.getWidth() / -2, Gdx.graphics.getHeight() / -2, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2);
+        bd.shapeDebugger.setColor(bd.grey);
+        bd.shapeDebugger.rect(Gdx.graphics.getWidth() / -2, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2);
+        bd.shapeDebugger.end();
+        bd.myBatch.end();*/
 
         //_skyBox.render();
         _plate.update();

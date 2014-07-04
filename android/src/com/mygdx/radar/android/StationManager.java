@@ -106,9 +106,9 @@ public class StationManager {
 	    station.position.y = decal.x;
         Log.d("ok", "galasky distance reel = " + (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(station.coord.latitude, station.coord.longitude)) + " distance gdx = " + Math.sqrt(decal.x * decal.x + decal.z * decal.z));
 	    station.instance = instance;
-	    station.instance.transform.setTranslation(decal.x, 0.23f, decal.z);
+	    station.instance.transform.setTranslation(decal.x, 0.971f, decal.z);
 	    station.instance.transform.scale(0.35f, 0.35f, 0.35f);
-        station.instance.transform.rotate(new Vector3(0, 1, 0), 95);
+        station.instance.transform.rotate(new Vector3(0, 1, 0), -43.39995f);
 	    Game3D.instance().instances.add(instance);
 	}
 	

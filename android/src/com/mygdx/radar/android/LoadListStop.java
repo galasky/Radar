@@ -21,7 +21,8 @@ public class LoadListStop extends Thread {
 	}
 	
 	public void run() {
-		_you.setPosition(location);
+        if (Game3D.instance().model != null)
+    		_you.setPosition(location);
 	}
 	
 }

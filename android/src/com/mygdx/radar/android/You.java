@@ -64,7 +64,7 @@ public class You {
       	model = modelBuilder.createBox(50f, .5f, 50f, 
       	new Material(TextureAttribute.createDiffuse(_pixmapTexture)), Usage.Position | Usage.Normal | Usage.TextureCoordinates);
       	modelInstance = new ModelInstance(model);
-      	modelInstance.transform.setToTranslation(0, -1f, 0);
+      //	modelInstance.transform.setToTranslation(0, -1f, 0);
         updateFloor();
        	_loaded = true;
 	}
@@ -88,9 +88,9 @@ public class You {
 
         for (int i = 10; i > 0; i--) {
             if (i % 2 == 0)
-                _pixmap.setColor(BubbleDrawer.instance().green);
+                _pixmap.setColor(BubbleDrawer.instance().cercle1);
             else
-                _pixmap.setColor(BubbleDrawer.instance().grey);
+                _pixmap.setColor(BubbleDrawer.instance().cercle2);
             _pixmap.fillCircle(_width / 2, _height / 2, 40 * i);
         }
         Texture _pixmapTexture = new Texture(_pixmap, Pixmap.Format.RGB888, false);
