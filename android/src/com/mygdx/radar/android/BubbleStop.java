@@ -225,6 +225,8 @@ public class BubbleStop {
             Stop stop = i.next();
             nb++;
 
+
+
             bd.myBatch.begin();
             bd.shapeDebugger.setProjectionMatrix(guiController.camera.combined);
             bd.shapeDebugger.begin(ShapeRenderer.ShapeType.Filled);
@@ -236,10 +238,12 @@ public class BubbleStop {
             bd.myBatch.end();
 
             bd._spriteBatch.begin();
+            bd.sHorloge.setPosition(position.x + 551, position.y + -136 - (nb - 1) * 75);
+            bd.sHorloge.draw(bd._spriteBatch);
             bd.sprite.setPosition(159 + position.x - 141, -21 + position.y - 40 - nb * (slide + 28));
             bd.sprite.draw(bd._spriteBatch);
-            bd.fontNum.draw(bd._spriteBatch, "10", 87 + position.x, -21 + 5 + position.y - nb * (slide + 28));
-            bd._font.draw(bd._spriteBatch, "Aiguelong", 152 + position.x, -21 + -17 + -23 + 40 + position.y - nb * (slide + 28));
+            bd.fontNum.draw(bd._spriteBatch, stop.line, 87 + position.x, -21 + 5 + position.y - nb * (slide + 28));
+            bd._font.draw(bd._spriteBatch, stop.destination, 152 + position.x, -21 + -17 + -23 + 40 + position.y - nb * (slide + 28));
 
             t = 999;
             String n = new String();

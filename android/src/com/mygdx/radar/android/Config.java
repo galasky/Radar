@@ -11,8 +11,8 @@ public class Config {
         distanceStation = 0.05f;
         timeRed = 0;
     	timeOrange = 3;
-        distance1 = .5f;
-        distance2 = .7f;
+        distance1 = .15f;
+        distance2 = 0.5f;
         distance3 = 1;
         distance = distance1;
 

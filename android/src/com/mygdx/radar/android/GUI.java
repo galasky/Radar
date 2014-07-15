@@ -99,11 +99,11 @@ public class GUI implements IGUI {
 		//_str = "x = " + x + " y = " + y + " deltaX = " + deltaX + " deltaY = " + deltaY;
 		if (_world.listBubbleStop == null)
 			return ;
-		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
+		//Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
 		BubbleStop bubbleStop = null;
-		while (i.hasNext())
+		for (int i = 0; i < _world.listBubbleStop.size(); i++)
 		{
-			bubbleStop = i.next();
+            bubbleStop = _world.listBubbleStop.get(i);
             bubbleStop.scroll(deltaY);
 			if (bubbleStop.touch)
 			{

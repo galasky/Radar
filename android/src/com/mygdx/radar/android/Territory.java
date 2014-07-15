@@ -9,6 +9,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 public class Territory {
     private DataBaseHelper  myDbHelper;
@@ -51,7 +52,6 @@ public class Territory {
         loadRoutes();
     	Cursor cursor = myDbHelper.execSQL("SELECT * FROM stops");
 
-       
         List<Stop> listStops = new ArrayList<Stop>();
         Stop stop;
         if (cursor.moveToFirst()) {
@@ -71,9 +71,7 @@ public class Territory {
     }
 
     public Stop getStopById(String id) {
-    	
     	Cursor cursor = myDbHelper.execSQL("SELECT * FROM stops WHERE stop_id = " + id);
-
         Stop stop = new Stop();
         if (cursor.moveToFirst()) {
             stop.stop_id = cursor.getString(cursor.getColumnIndex("stop_id"));
@@ -131,8 +129,9 @@ public class Territory {
         
         List<StopTimes> listStopTimes = new ArrayList<StopTimes>();
         StopTimes stopTimes;
+       // Log.d("ok", "stop_id " + stop_id);
         if (cursor.moveToFirst()) {
-            cursor.moveToNext();
+           // Log.d("ok", "stop_id = " + cursor.getString(cursor.getColumnIndex("trip_id")));
             do {
                 stopTimes = new StopTimes();
                 stopTimes.trip_id = cursor.getString(cursor.getColumnIndex("trip_id"));
@@ -141,6 +140,7 @@ public class Territory {
                 stopTimes.stop_sequence = cursor.getString(cursor.getColumnIndex("stop_sequence"));
                 stopTimes.loadTrip();
                 listStopTimes.add(stopTimes);
+                cursor.moveToNext();
             } while (cursor.moveToNext());
         }
         return listStopTimes;

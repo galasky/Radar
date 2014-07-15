@@ -9,18 +9,20 @@ import java.util.List;
 
 public class Stop {
 
-	public List<StopTimes>	listStopTimes;
-	public MyTimes	nextTime;
-	public boolean	select;
-    public String stop_id;
-    public String stop_code;
-    public String stop_name;
-    public String stop_desc;
-    public String zone_id;
-    public String stop_url;
-    public String location_type;
-    public String parent_station;
-    public String stop_timezone;
+	public List<StopTimes>	    listStopTimes;
+	public MyTimes	            nextTime;
+	public boolean	            select;
+    public String               stop_id;
+    public String               stop_code;
+    public String               stop_name;
+    public String               stop_desc;
+    public String               zone_id;
+    public String               stop_url;
+    public String               location_type;
+    public String               parent_station;
+    public String               stop_timezone;
+    public String               destination;
+    public String               line;
     public String               wheelchair_boarding;
     public ArrayList<String>    list_trip;
     public List<MyTimes>        list_time;
@@ -28,7 +30,10 @@ public class Stop {
     public CoordinateGPS coord = new CoordinateGPS();
 
     public Stop(){
+        line = "10";
+        list_time = new ArrayList<MyTimes>();
     	select = false;
+        destination = new String("ABCDEFGHIJKLMNO");
     }
 
     public void	getListStopTimes() {

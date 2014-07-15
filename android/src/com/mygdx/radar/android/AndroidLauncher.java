@@ -53,6 +53,7 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
         else
             You.instance().setPosition(location);
     }
+
     @Override
     public void onProviderDisabled(String arg0) {
         // TODO Auto-generated method stub

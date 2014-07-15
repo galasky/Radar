@@ -11,10 +11,11 @@ public class World {
     public  HashMap<String, Stop>   mapStop;
 	public	LoadListStop			loadListStop;
     public  HashMap<String, Route>       routes;
-    public Vector2 toto;
+    public Vector2 toto, tata;
 	
 	private	World() {
         toto = new Vector2();
+        tata = new Vector2();
         listBubbleStop = null;
         loadListStop = new LoadListStop();
         routes = new HashMap<String, Route>();

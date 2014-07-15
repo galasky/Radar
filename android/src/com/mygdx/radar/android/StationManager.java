@@ -51,7 +51,20 @@ public class StationManager {
         return (World.instance().mapStop.get(stop.stop_id) != null);
     }
 
-	public void add(List<Stop> listStop) {
+    public void addListStation(List<Station> listStation) {
+        Iterator<Station> i = listStation.iterator();
+        listStation = new ArrayList<Station>();
+        while (i.hasNext())
+        {
+            Station station = i.next();
+            station.calcDistance();
+            listStation.add(station);
+            loadInstance(station);
+            loadBubble(station);
+        }
+    }
+
+	public void add(List<Stop> listStop, float distance) {
 		Iterator<Stop> i = listStop.iterator();
 		listStation = new ArrayList<Station>();
         Log.d("ok", "galasky " + listStop.size());
@@ -66,7 +79,7 @@ public class StationManager {
                 station.stops.add(stop);
                 station.name = stop.stop_name;
                 station.coord = stop.coord;
-                station.distanceAffichage = Config.instance().distance;
+                station.distanceAffichage = distance;
                 i.remove();
                 Iterator<Stop> u = listStop.iterator();
                 while (u.hasNext())
@@ -83,13 +96,27 @@ public class StationManager {
                 station.moyCoord();
                 station.getListStopTimes();
                 listStation.add(station);
+                showStation(station);
                 loadInstance(station);
                 loadBubble(station);
             }
 		}
 		_loadFinish = true;
 	}
-	
+
+    private void showStation(Station station)
+    {
+        Log.d("ok", "station name : " + station.name);
+        Log.d("ok", "station position : latitude : " + station.coord.latitude + " longitude : " + station.coord.longitude);
+        Log.d("ok", "station ListStop :");
+        for (int i = 0; i < station.stops.size(); i++)
+        {
+            Stop stop = station.stops.get(i);
+            Log.d("ok", "stop name : " + stop.destination);
+        }
+        Log.d("ok", "station");
+    }
+
 	public void loadInstance(Station station) {
   //      ModelBuilder modelBuilder = new ModelBuilder();
 
@@ -104,11 +131,11 @@ public class StationManager {
         ModelInstance instance = new ModelInstance(Game3D.instance().modelStation);
 	    station.position.x = decal.z;
 	    station.position.y = decal.x;
-        Log.d("ok", "galasky distance reel = " + (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(station.coord.latitude, station.coord.longitude)) + " distance gdx = " + Math.sqrt(decal.x * decal.x + decal.z * decal.z));
+       // Log.d("ok", "galasky distance reel = " + (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(station.coord.latitude, station.coord.longitude)) + " distance gdx = " + Math.sqrt(decal.x * decal.x + decal.z * decal.z));
 	    station.instance = instance;
 	    station.instance.transform.setTranslation(decal.x, 0.971f, decal.z);
 	    station.instance.transform.scale(0.35f, 0.35f, 0.35f);
-        station.instance.transform.rotate(new Vector3(0, 1, 0), -43.39995f);
+        //station.instance.transform.rotate(new Vector3(0, 1, 0), -43.39995f);
 	    Game3D.instance().instances.add(instance);
 	}
 	

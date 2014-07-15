@@ -34,11 +34,15 @@ public class Station {
 	}
 
     public void refreshInstance() {
-        instanceGoTo = new Vector2();
+        position.y = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(coord.latitude, _you.coordinate.longitude)) * 10 * (coord.latitude > _you.coordinate.latitude ? 1 : -1);
+        position.x = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(_you.coordinate.latitude, coord.longitude)) * 10 *(coord.longitude > _you.coordinate.longitude ? 1 : -1);
+        instance.transform.setToTranslation(new Vector3(position.y, 0.971f, position.x));
+        instance.transform.scale(0.35f, 0.35f, 0.35f);
+        /*instanceGoTo = new Vector2();
         instanceGoTo.y = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(coord.latitude, _you.coordinate.longitude)) * 10 * (coord.latitude > _you.coordinate.latitude ? 1 : -1);
         instanceGoTo.x = (float) Territory.distanceAB(_you.coordinate, new CoordinateGPS(_you.coordinate.latitude, coord.longitude)) * 10 *(coord.longitude > _you.coordinate.longitude ? 1 : -1);
         Log.d("ok", "galasky Position  " + position.x + " " + position.y);
-        Log.d("ok", "galasky goTo " + instanceGoTo.x + " " + instanceGoTo.y);
+        Log.d("ok", "galasky goTo " + instanceGoTo.x + " " + instanceGoTo.y);*/
 
     }
 

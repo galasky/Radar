@@ -37,7 +37,6 @@ public class Plate {
 
         Stopinstances = new Array<ModelInstance>();
     	_you.load();
-    	Game3D.instance().instances.add(_you.modelInstance);
         nbStopSelect = 0;
     }
     
