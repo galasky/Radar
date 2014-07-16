@@ -1,6 +1,9 @@
 package com.mygdx.radar.android;
 
+import android.widget.Button;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,11 +18,12 @@ public class Menu {
     public boolean active, desactive;
     public boolean opened;
     private SpriteBatch myBatch;
+    private Info            info;
     private ShapeRenderer shapeDebugger;
     private GUIController guiController;
     private int         slide, maxSlide;
     private PushButton  parametres;
-    private PushButton  info;
+    private PushButton  Buttoninfo;
     private boolean     showInfo;
     private MyFont      font;
     private ListFont    listFont;
@@ -43,6 +47,7 @@ public class Menu {
     }
 
     public Menu(GUIController gui) {
+        info = new Info(gui);
         listFont = null;
         font = new MyFont("font/HelveticaNeue.ttf", 20);
         showInfo = false;
@@ -52,7 +57,7 @@ public class Menu {
         myBatch = new SpriteBatch();
         shapeDebugger = new ShapeRenderer();
         parametres = new PushButton(new ActionParametres(), new Texture(Gdx.files.internal("texture/parametres.png")), new Vector2(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() + 60), new Vector2(80, 80));
-        info = new PushButton(new ActionInfo(), new Texture(Gdx.files.internal("texture/info_icon.png")), new Vector2(Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() + 60), new Vector2(80, 80));
+        Buttoninfo = new PushButton(new ActionInfo(), new Texture(Gdx.files.internal("texture/info_icon.png")), new Vector2(Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() + 60), new Vector2(80, 80));
         active = false;
         desactive = false;
         opened = false;
@@ -96,17 +101,18 @@ public class Menu {
             }
         }
         parametres.setPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() + 60 - slide);
-        info.setPosition(Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() + 60 - slide);
+        Buttoninfo.setPosition(Gdx.graphics.getWidth() - 50, Gdx.graphics.getHeight() + 60 - slide);
     }
 
     public void tap(float x, float y) {
         parametres.tap(x, y);
-        info.tap(x, y);
+        Buttoninfo.tap(x, y);
     }
 
     private void showInfo(){
+        font.setColor(Color.WHITE);
         shapeDebugger.rect(-Gdx.graphics.getWidth() / 2,  0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2);
-        font.draw(myBatch, "Radar vii.jj Copyright expert-its, Lambert-Tesserenc et Regis MARTY", 40, Gdx.graphics.getHeight() / 2);
+        font.draw(myBatch, "Radar vii.jj Copyright expert-its, Lambert-Tesserenc et Regis MARTY", 40, World.instance().tata.y);
     }
 
     public void render() {
@@ -127,11 +133,11 @@ public class Menu {
             shapeDebugger.begin(ShapeRenderer.ShapeType.Filled);
             shapeDebugger.rect(-Gdx.graphics.getWidth() / 2,  Gdx.graphics.getHeight() / 2, Gdx.graphics.getWidth(), -slide);
             if (showInfo)
-                showInfo();
+                info.render();
             shapeDebugger.end();
             myBatch.end();
             parametres.draw();
-            info.draw();
+            Buttoninfo.draw();
             if (listFont != null)
                 listFont.render();
         }

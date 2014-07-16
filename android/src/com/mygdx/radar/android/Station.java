@@ -16,7 +16,7 @@ public class Station {
 	public String			name;
 	public CoordinateGPS	coord;
 	public ModelInstance	instance;
-    public float            distanceAffichage;
+    //public float            distanceAffichage;
 	public float			distance;
     private Vector2     instanceGoTo;
 	public float			distanceTemps;

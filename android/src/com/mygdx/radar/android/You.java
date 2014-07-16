@@ -200,7 +200,8 @@ public class You {
                 StationManager.instance().addListStation(liststation);
             }*/
             getJson();
-           StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate), Config.instance().distance);
+            new LoadStation().start();
+           //StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate), Config.instance().distance);
 		}
 		else
 		{
@@ -216,7 +217,8 @@ public class You {
                     b.station.refreshInstance();
                 }
             }
-            StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate), Config.instance().distance);
+            //new LoadStation().start();
+            //StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate), Config.instance().distance);
 			//position.x = p.x;
 			//position.y = p.y;
 			//position.z = p.z;

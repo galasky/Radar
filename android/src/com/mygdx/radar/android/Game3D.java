@@ -140,7 +140,7 @@ public class Game3D implements ApplicationListener {
     }
 
     public void	touchScreen(float x, float y, float deltaX, float deltaY) {
-       World.instance().tata.x += deltaX;
+       World.instance().tata.y -= deltaY;
        toto -= deltaX / 1000;
       // sSky.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / toto);
        //sSky.setPosition(0, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / toto);

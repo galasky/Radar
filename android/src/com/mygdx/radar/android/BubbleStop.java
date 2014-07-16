@@ -43,8 +43,8 @@ public class BubbleStop {
         _you = You.instance();
         pAffichage = null;
         pSave = null;
-		soundManager = SoundManager.instance();
-		soundManager.get("pop.mp3").play();
+		//soundManager = SoundManager.instance();
+		//soundManager.get("pop.mp3").play();
 		order = -1;
 		_goTo = null;
 		_today = new Date();

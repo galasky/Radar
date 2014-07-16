@@ -77,7 +77,9 @@ public class ZoomController {
 					direction = 0;
 					if (position != 1) {
                         Config.instance().distance = Config.instance().distance2;
-                        new LoadStation().start();
+                        LoadStation load = new LoadStation();
+                        load.filtre = true;
+                        load.start();
                         MyCamera.instance().zoomTo(20);
                     }
                     position = 1;
@@ -89,7 +91,9 @@ public class ZoomController {
                 if (position != 2)
                 {
                     Config.instance().distance = Config.instance().distance3;
-                    new LoadStation().start();
+                    LoadStation load = new LoadStation();
+                    load.filtre = true;
+                    load.start();
                     MyCamera.instance().zoomTo(26);
                 }
                 position = 2;
@@ -101,7 +105,9 @@ public class ZoomController {
                 if (position != 0) {
                     Config.instance().distance = Config.instance().distance1;
                     loadStation.interrupt();
-                    new LoadStation().start();
+                    LoadStation load = new LoadStation();
+                    load.filtre = true;
+                    load.start();
                     MyCamera.instance().zoomTo(10);
                 }
                 position = 0;

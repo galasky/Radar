@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class StationManager {
@@ -21,9 +22,11 @@ public class StationManager {
 	private You						_you;
 	private List<Station>			listStation;
 	private List<BubbleStop>		listTmp;
+    public  ArrayList<BubbleStop>   listLoaded;
 	public boolean					endDraw;
-	
+
 	private StationManager () {
+        listLoaded = new ArrayList<BubbleStop>();
 		listTmp = new ArrayList<BubbleStop>();
 		listStation = null;
 		_you = You.instance();
@@ -64,7 +67,7 @@ public class StationManager {
         }
     }
 
-	public void add(List<Stop> listStop, float distance) {
+	public void add(List<Stop> listStop) {
 		Iterator<Stop> i = listStop.iterator();
 		listStation = new ArrayList<Station>();
         Log.d("ok", "galasky " + listStop.size());
@@ -79,7 +82,7 @@ public class StationManager {
                 station.stops.add(stop);
                 station.name = stop.stop_name;
                 station.coord = stop.coord;
-                station.distanceAffichage = distance;
+                //station.distanceAffichage = distance;
                 i.remove();
                 Iterator<Stop> u = listStop.iterator();
                 while (u.hasNext())
@@ -96,13 +99,56 @@ public class StationManager {
                 station.moyCoord();
                 station.getListStopTimes();
                 listStation.add(station);
-                showStation(station);
+                //showStation(station);
                 loadInstance(station);
                 loadBubble(station);
+                LoadStation load = new LoadStation();
+                load.filtre = true;
+                load.start();
             }
 		}
 		_loadFinish = true;
+        //filtreDistance();
 	}
+
+    public void filtreDistance() {
+        if (World.instance().listBubbleStop == null)
+            return ;
+        for (int i = 0; i < listLoaded.size(); i++)
+        {
+            BubbleStop bubbleStop = listLoaded.get(i);
+            if (bubbleStop.station.distance <= Config.instance().distance)
+            {
+                addBubble(bubbleStop);
+                listLoaded.remove(i);
+                i--;
+                Game3D.instance().instances.add(bubbleStop.station.instance);
+            }
+        }
+
+        for (int i = 0; i < World.instance().listBubbleStop.size(); i++)
+        {
+            BubbleStop bubbleStop = World.instance().listBubbleStop.get(i);
+            Log.d("ioj", "STATION FILTRE NAME " + bubbleStop.station.name + " DISTANCE "+ bubbleStop.station.distance);
+            if (bubbleStop.station.distance > Config.instance().distance) {
+                listLoaded.add(bubbleStop);
+                World.instance().listBubbleStop.remove(i);
+                i--;
+                for (int u = 0; u < Game3D.instance().instances.size; u++)
+                {
+                    ModelInstance instance = Game3D.instance().instances.get(u);
+                    if (instance == bubbleStop.station.instance)
+                    {
+                        Game3D.instance().instances.removeIndex(u);
+                    }
+                }
+            }
+           // Log.d("ok", "STATION FILTRE SIZE " + World.instance().listBubbleStop.size() + " i = " + i);
+        }
+    }
+
+    public void initPoseBubble() {
+    }
 
     private void showStation(Station station)
     {
@@ -136,7 +182,7 @@ public class StationManager {
 	    station.instance.transform.setTranslation(decal.x, 0.971f, decal.z);
 	    station.instance.transform.scale(0.35f, 0.35f, 0.35f);
         //station.instance.transform.rotate(new Vector3(0, 1, 0), -43.39995f);
-	    Game3D.instance().instances.add(instance);
+	    //Game3D.instance().instances.add(instance);
 	}
 	
 	public void loadBubble(Station station) {
@@ -148,16 +194,56 @@ public class StationManager {
 		if (endDraw)
 		{
 			listTmp.add(bubble);
-			
+
 			Iterator<BubbleStop> it = listTmp.iterator();
 			while (it.hasNext())
 			{
 				BubbleStop b = it.next();
-				World.instance().addBubble(b);
+/*                if (b.station.distance <= Config.instance().distance)
+    				addBubble(b);
+                else*/
+                    listLoaded.add(b);
 			}
 			listTmp.clear();
 		}
 		else
 			listTmp.add(bubble);
 	}
+
+
+    private void addBubble(BubbleStop bubbleStop) {
+        //Iterator<BubbleStop> it = listBubbleStop.iterator();
+        int i = 0;
+        boolean find = false;
+        float ecart = 0;
+        float start = Gdx.graphics.getHeight() - 185;
+        ArrayList<BubbleStop> 	listBubbleStop = World.instance().listBubbleStop;
+
+        while (i < listBubbleStop.size() && !find)
+        {
+            BubbleStop b = listBubbleStop.get(i);
+            if (i == 0)
+            {
+                start = b.pAffichage.y;
+            }
+            if (!find && bubbleStop.station.distance < b.station.distance)
+            {
+                bubbleStop.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400,  start + ecart));
+                listBubbleStop.add(i, bubbleStop);
+                find = true;
+            }
+
+            if (find)
+            {
+                b.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400, start + ecart));
+            }
+            ecart += (-73 - (b.station.stops.size()) * 76) - 10;
+            i++;
+
+        }
+        if (find)
+            return ;
+        bubbleStop.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400, start + ecart));
+        listBubbleStop.add(bubbleStop);
+    }
 }

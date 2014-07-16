@@ -9,14 +9,19 @@ import java.util.List;
  * Created by Administrateur on 01/07/2014.
  */
 public class LoadStation extends Thread {
-    public LoadStation() {
+    public boolean filtre;
 
+    public LoadStation() {
+        filtre = false;
     }
+
+
 
     @Override
     public void run() {
         while (Game3D.instance().modelStation == null || You.instance().coordinate == null)
             ;
+
         /*List<Station>  liststation = new ArrayList<Station>();
         Station station = new Station();
         station.name = "Alfred Nobel";
@@ -33,6 +38,10 @@ public class LoadStation extends Thread {
        // You.instance().updateFloor();
         //Game3D.instance().instances.clear();
        // You.instance().updateFloor();
-        StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance, You.instance().coordinate), Config.instance().distance);
+
+        if (filtre)
+            StationManager.instance().filtreDistance();
+        else
+            StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance3, You.instance().coordinate));
     }
 }

@@ -181,8 +181,8 @@ public class GUI implements IGUI {
             while (i < World.instance().listBubbleStop.size())
             {
                 BubbleStop b = World.instance().listBubbleStop.get(i);
-                if (b.position.y > 0 && b.position.y < Gdx.graphics.getHeight() && Config.instance().distance >= b.station.distanceAffichage)
-                    b.render(guiController);
+                if (b.position.y > 0 && b.position.y < Gdx.graphics.getHeight())
+                     b.render(guiController);
                 i++;
             }
         }
