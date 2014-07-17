@@ -24,8 +24,8 @@ public class ZoomController {
 	private	int		            position;
 	private ShapeRenderer       shapeDebugger;
     private LoadStation         loadStation;
-	
-	public ZoomController() {
+	public boolean              zoomFinish;
+	private ZoomController() {
         loadStation = new LoadStation();
 		position = 0;
 		direction = 0;
@@ -57,6 +57,24 @@ public class ZoomController {
 			direction = 0;
 		}
 	}
+
+    public void zoomIn() {
+        if (zoomFinish == false)
+            return ;
+        if (Config.instance().distance == Config.instance().distance2)
+            distance1();
+        else if (Config.instance().distance == Config.instance().distance3)
+            distance2();
+    }
+
+    public void zoomOut() {
+        if (zoomFinish == false)
+            return ;
+        if (Config.instance().distance == Config.instance().distance1)
+            distance2();
+        else if (Config.instance().distance == Config.instance().distance2)
+            distance3();
+    }
 	
 	public void touch(float x, float y, float deltaX, float deltaY) {
 		Vector2 v = new Vector2(x - cursor.x, y - cursor.y);
@@ -67,7 +85,7 @@ public class ZoomController {
 	}
 
 	private void update() {
-		if (!touch)
+		/*if (!touch)
 		{
 			if (position == -1)
 				cursor.x += (direction < 0 ? -len / 50 : (Math.abs(cursor.x - cursorA.x) > 10 ? len / 50 : 0));
@@ -76,11 +94,7 @@ public class ZoomController {
 					cursor.x = (cursorA.x + cursorB.x) / 2;
 					direction = 0;
 					if (position != 1) {
-                        Config.instance().distance = Config.instance().distance2;
-                        LoadStation load = new LoadStation();
-                        load.filtre = true;
-                        load.start();
-                        MyCamera.instance().zoomTo(20);
+                        zoom2();
                     }
                     position = 1;
 				}
@@ -90,11 +104,7 @@ public class ZoomController {
 				direction = 0;
                 if (position != 2)
                 {
-                    Config.instance().distance = Config.instance().distance3;
-                    LoadStation load = new LoadStation();
-                    load.filtre = true;
-                    load.start();
-                    MyCamera.instance().zoomTo(26);
+                    zoom3();
                 }
                 position = 2;
 			}
@@ -103,21 +113,41 @@ public class ZoomController {
 				cursor.x = cursorA.x;
 				direction = 0;
                 if (position != 0) {
-                    Config.instance().distance = Config.instance().distance1;
-                    loadStation.interrupt();
-                    LoadStation load = new LoadStation();
-                    load.filtre = true;
-                    load.start();
-                    MyCamera.instance().zoomTo(10);
+                    zoom1();
                 }
                 position = 0;
 			}
-		}
+		}*/
 
 	}
-	
+
+    public void distance1() {
+        Config.instance().distance = Config.instance().distance1;
+        loadStation.interrupt();
+        LoadStation load = new LoadStation();
+        load.filtre = true;
+        load.start();
+        MyCamera.instance().zoomTo(10);
+    }
+
+    public void distance2() {
+        Config.instance().distance = Config.instance().distance2;
+        LoadStation load = new LoadStation();
+        load.filtre = true;
+        load.start();
+        MyCamera.instance().zoomTo(20);
+    }
+
+    public void distance3() {
+        Config.instance().distance = Config.instance().distance3;
+        LoadStation load = new LoadStation();
+        load.filtre = true;
+        load.start();
+        MyCamera.instance().zoomTo(26);
+    }
+
 	public void render() {
-		update();
+		/*update();
 		myBatch.begin();
 		Gdx.gl20.glLineWidth(10);
 		shapeDebugger.setProjectionMatrix(camera.combined);
@@ -137,6 +167,14 @@ public class ZoomController {
 	    shapeDebugger.circle(cursor.x, cursorA.y, 30);
 	    shapeDebugger.end();
 	    myBatch.end();
-		touch = false;
+		touch = false;*/
 	}
+
+    public static ZoomController instance() {
+        return SingletonHolder.instance;
+    }
+
+    private static class SingletonHolder {
+        private final static ZoomController instance = new ZoomController();
+    }
 }

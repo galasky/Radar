@@ -1,5 +1,7 @@
 package com.mygdx.radar.android;
 
+import android.util.Log;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
@@ -18,7 +20,16 @@ public class DetecteurGeste implements GestureListener {
 	
     @Override
     public boolean zoom (float DistanceInitial, float DistanceActuel) {
-    	MyCamera.instance().zoom(DistanceInitial, DistanceActuel);
+        Log.d("ok", "DistanceInitial " + DistanceInitial + " DistanceActuel " + DistanceActuel);
+        if (DistanceActuel - DistanceInitial > 200)
+        {
+            ZoomController.instance().zoomIn();
+        }
+        else if (DistanceActuel - DistanceInitial < -200)
+        {
+            ZoomController.instance().zoomOut();
+        }
+    	//MyCamera.instance().zoom(DistanceInitial, DistanceActuel);
     	return false;
     }
 

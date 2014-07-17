@@ -7,6 +7,7 @@ import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.util.Log;
 import android.view.WindowManager;
 
 
@@ -46,7 +47,7 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
     @Override
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
-
+        Log.d("ok", "longitude = " + location.getLongitude() + " latitude = " + location.getLatitude());
         if (World.instance().loadListStop.loaded == false) {
             World.instance().loadListStop.location = location;
         }

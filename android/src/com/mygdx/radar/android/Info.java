@@ -50,9 +50,9 @@ public class Info {
         myBatch.end();
         myBatch.begin();
         font.draw(myBatch, "Radar Copyright expert-its, Lambert-Tesserenc et Regis MARTY", 40, Gdx.graphics.getHeight() / 2);
-        font.draw(myBatch, "Version : 0.0.7", 40, Gdx.graphics.getHeight() / 2 + 80);
-        font.draw(myBatch, "Date de build : 16/07/2014 12h30", 40, Gdx.graphics.getHeight() / 2 + 80 * 2);
-        font.draw(myBatch, "commit : Version 0.0.7", 40, Gdx.graphics.getHeight() / 2 + 80 * 3);
+        font.draw(myBatch, "Version : 0.0.8 Beta", 40, Gdx.graphics.getHeight() / 2 + 80);
+        font.draw(myBatch, "Date de build : 17/07/2014 17h47", 40, Gdx.graphics.getHeight() / 2 + 80 * 2);
+        font.draw(myBatch, "commit : Version 0.0.8 Zoom tactile", 40, Gdx.graphics.getHeight() / 2 + 80 * 3);
         myBatch.end();
     }
 }

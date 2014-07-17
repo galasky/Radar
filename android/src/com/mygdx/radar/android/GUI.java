@@ -1,5 +1,6 @@
 package com.mygdx.radar.android;
 
+import android.util.Log;
 import android.widget.Button;
 
 import java.lang.reflect.WildcardType;
@@ -97,15 +98,21 @@ public class GUI implements IGUI {
         toto.x += deltaX;
         toto.y -= deltaY;
 		//_str = "x = " + x + " y = " + y + " deltaX = " + deltaX + " deltaY = " + deltaY;
-		if (_world.listBubbleStop == null)
+		if (_world.listBubbleStop == null || _world.listBubbleStop.size() == 0)
 			return ;
 		//Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
 		BubbleStop bubbleStop = null;
+        if (_world.listBubbleStop.get(0).pAffichage.y < 100 && deltaY > 0)
+            return ;
+        if (_world.listBubbleStop.get(_world.listBubbleStop.size() - 1).pAffichage.y > Gdx.graphics.getHeight() - 100 && deltaY < 0)
+            return ;
 		for (int i = 0; i < _world.listBubbleStop.size(); i++)
 		{
+            Log.d("ok", "SCROOL " + _world.listBubbleStop.size());
             bubbleStop = _world.listBubbleStop.get(i);
             bubbleStop.scroll(deltaY);
-			if (bubbleStop.touch)
+
+			/*if (bubbleStop.touch)
 			{
 				bubbleStop.move(deltaX, -deltaY);
 				return;
@@ -113,7 +120,7 @@ public class GUI implements IGUI {
 			if (bubbleStop.collision(x, Gdx.graphics.getHeight() - y))
 			{
 				bubbleStop.touch = true;
-			}
+			}*/
 		}
 	}
 	
@@ -172,7 +179,6 @@ public class GUI implements IGUI {
 		if (_initPosition == true)
 			initPosition();
 		updateBubbleStop();
-
         if (World.instance().listBubbleStop != null)
         {
            // Iterator<BubbleStop> it = World.instance().listBubbleStop.iterator();
@@ -199,21 +205,28 @@ public class GUI implements IGUI {
 			return ;
 		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
 		BubbleStop bubbleStop = null;
-		
+        Log.d("ok", "SELECT " + x + " " + y);
+
 		while (i.hasNext())
 		{
 			bubbleStop = i.next();
+            Log.d("ok", "SELECT " + bubbleStop.position.x + " " + bubbleStop.position.y);
 			if (_bubbleSelect == null && bubbleStop.collision(x, y))
 			{
-				bubbleStop.select();
-				_bubbleSelect = bubbleStop;
-				return ;
+                Log.d("ok", "SELECT OK");
+				//bubbleStop.select();
+				//_bubbleSelect = bubbleStop;
+                StationManager.instance().selectBubble(bubbleStop);
+                return ;
 			}
 		}
-		if (_bubbleSelect != null)
-		{
-			_bubbleSelect.unSelect();
-		}
+        StationManager.instance().initUnselect();
+        StationManager.instance().unSelectBubble();
+        float tmp = Config.instance().distance;
+        Config.instance().distance = Config.instance().distance1;
+        StationManager.instance().filtreDistance();
+        Config.instance().distance = tmp;
+        StationManager.instance().filtreDistance();
 	}
 
 	@Override

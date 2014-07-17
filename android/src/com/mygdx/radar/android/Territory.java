@@ -45,11 +45,10 @@ public class Territory {
                 World.instance().routes.put(route.route_id, route);
             } while (cursor.moveToNext());
         }
-
     }
 
     public List<Stop> getListStopByDistance(double distance, CoordinateGPS position) {
-        loadRoutes();
+        //loadRoutes();
     	Cursor cursor = myDbHelper.execSQL("SELECT * FROM stops");
 
         List<Stop> listStops = new ArrayList<Stop>();
@@ -220,6 +219,7 @@ public class Territory {
                 Math.sin(dLon/2) * Math.sin(dLon/2) * Math.cos(lat1) * Math.cos(lat2);
         double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
         double d = R * c;
+        Log.d("ok", "DistanceAB lat2 " + lat1 + " lat2 " + lat2);
         return d; // Km
     }
 }

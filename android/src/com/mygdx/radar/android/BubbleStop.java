@@ -1,5 +1,7 @@
 package com.mygdx.radar.android;
 
+import android.util.Log;
+
 import java.util.Date;
 import java.util.Iterator;
 
@@ -77,10 +79,9 @@ public class BubbleStop {
 	}
 	
 	public boolean collision(float x, float y) {
-		if (!select)
-			return (x >= position.x && x <= position.x + 40 * station.name.length() && y >= position.y - 50 && y <= position.y + 50);
-		else
-			return (x >= position.x - Gdx.graphics.getWidth() / 2 - 160 && x <= position.x + 800 && y >=  position.y + ((station.stops.size() + 5.5f) * slide) && y <= position.y - Gdx.graphics.getHeight() / 2 + 20);
+
+//        (-73 - (station.stops.size()) * 76) * slide / 50
+		return (x >= position.x && x <= position.x + 800 && y >=  position.y + (-73 - (station.stops.size()) * 76) * slide / 50 && y <= position.y);
 	}
 	
 	public void		move(float deltaX, float deltaY)
@@ -164,7 +165,15 @@ public class BubbleStop {
 	}
 
     public void scroll(float deltaY) {
-        pAffichage.y -= deltaY;
+//        if (StationManager.instance().bubbleSelected == null)
+            pAffichage.y -= deltaY;
+//        else
+//        {
+//            if (pAffichage.y > 100 && deltaY > 0)
+//                pAffichage.y -= deltaY;
+//            if ( pAffichage.y < Gdx.graphics.getHeight() - 100 && deltaY < 0)
+//                pAffichage.y -= deltaY;
+//        }
     }
 
     public void render(GUIController guiController) {

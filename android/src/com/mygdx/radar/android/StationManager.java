@@ -22,11 +22,15 @@ public class StationManager {
 	private You						_you;
 	private List<Station>			listStation;
 	private List<BubbleStop>		listTmp;
-    public  ArrayList<BubbleStop>   listLoaded;
+    public  ArrayList<BubbleStop>   listLoaded, listCache;
 	public boolean					endDraw;
+    public BubbleStop              bubbleSelected;
+    private Vector2                 positionFirst;
 
 	private StationManager () {
+        bubbleSelected = null;
         listLoaded = new ArrayList<BubbleStop>();
+        listCache = new ArrayList<BubbleStop>();
 		listTmp = new ArrayList<BubbleStop>();
 		listStation = null;
 		_you = You.instance();
@@ -116,11 +120,18 @@ public class StationManager {
             return ;
         for (int i = 0; i < listLoaded.size(); i++)
         {
-            BubbleStop bubbleStop = listLoaded.get(i);
+            BubbleStop bubbleStop = null;
+            if (listLoaded.size() != 0)
+                bubbleStop = listLoaded.get(i);
+            else
+                return;
             if (bubbleStop.station.distance <= Config.instance().distance)
             {
                 addBubble(bubbleStop);
-                listLoaded.remove(i);
+                if (listLoaded.size() != 0)
+                    listLoaded.remove(i);
+                else
+                    return;
                 i--;
                 Game3D.instance().instances.add(bubbleStop.station.instance);
             }
@@ -131,7 +142,8 @@ public class StationManager {
             BubbleStop bubbleStop = World.instance().listBubbleStop.get(i);
             Log.d("ioj", "STATION FILTRE NAME " + bubbleStop.station.name + " DISTANCE "+ bubbleStop.station.distance);
             if (bubbleStop.station.distance > Config.instance().distance) {
-                listLoaded.add(bubbleStop);
+                if (bubbleSelected == null)
+                    listLoaded.add(bubbleStop);
                 World.instance().listBubbleStop.remove(i);
                 i--;
                 for (int u = 0; u < Game3D.instance().instances.size; u++)
@@ -202,7 +214,10 @@ public class StationManager {
 /*                if (b.station.distance <= Config.instance().distance)
     				addBubble(b);
                 else*/
+                if (bubbleSelected == null)
                     listLoaded.add(b);
+                else
+                    listCache.add(b);
 			}
 			listTmp.clear();
 		}
@@ -210,6 +225,56 @@ public class StationManager {
 			listTmp.add(bubble);
 	}
 
+    public void selectBubble(BubbleStop bubbleStop) {
+        if (bubbleSelected != null)
+            return ;
+        bubbleSelected = bubbleStop;
+        positionFirst = World.instance().listBubbleStop.get(0).position;
+        bubbleStop.pAffichage = new Vector2(bubbleStop.pAffichage.x, Gdx.graphics.getHeight() - 100);
+        for (int u = 0; u < Game3D.instance().instances.size; u++)
+        {
+            ModelInstance instance = Game3D.instance().instances.get(u);
+            if (instance != bubbleStop.station.instance && instance != You.instance().modelInstance)
+            {
+                Game3D.instance().instances.removeIndex(u);
+                u--;
+            }
+        }
+        for (int i = 0; i < World.instance().listBubbleStop.size(); i++) {
+            BubbleStop b = World.instance().listBubbleStop.get(i);
+            if (bubbleStop.station != b.station) {
+                listCache.add(b);
+                World.instance().listBubbleStop.remove(i);
+                i--;
+            }
+        }
+    }
+
+    public void initUnselect() {
+        if (bubbleSelected != null)
+        {
+            bubbleSelected.pAffichage = new Vector2(positionFirst);
+//            for (int i = 0; i < listCache)
+        }
+
+    }
+
+    public void unSelectBubble() {
+        if (bubbleSelected == null)
+            return ;
+        Log.d("ok", "UNSELECT OK " + listCache.size());
+        //World.instance().listBubbleStop.remove(0);
+
+        for (int u = 0; u < listCache.size(); u++)
+        {
+            BubbleStop bubbleStop = listCache.get(u);
+            Log.d("ok", "UNSELECT ADD " + listCache.size());
+            Game3D.instance().instances.add(bubbleStop.station.instance);
+            addBubble(bubbleStop);
+        }
+        listCache.clear();
+        bubbleSelected = null;
+    }
 
     private void addBubble(BubbleStop bubbleStop) {
         //Iterator<BubbleStop> it = listBubbleStop.iterator();

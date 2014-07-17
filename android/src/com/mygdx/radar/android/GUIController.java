@@ -41,7 +41,7 @@ public class GUIController {
         menu = new Menu(this);
         _homeButton = new PushButton(new ActionHome(), new Texture(Gdx.files.internal("texture/user-home.png")), new Vector2(50, Gdx.graphics.getHeight() - 50), new Vector2(80, 80));
 		stationManager = StationManager.instance();
-		_zoomController = new ZoomController();
+		_zoomController = ZoomController.instance();
 		_date = new Date();
 		_time = 0;
 		_gui = new GUI(this);
@@ -104,10 +104,11 @@ public class GUIController {
 		
 		_spriteBatch.begin();
 		_font.draw(_spriteBatch, time.hours + ":" + (time.minutes < 10 ? "0" + time.minutes : time.minutes), Gdx.graphics.getWidth() - 130, Gdx.graphics.getHeight() - 40);
+		_font.draw(_spriteBatch, (int) (Config.instance().distance * 1000) + " m", 40, 80);
 		//_font.draw(_spriteBatch, "x = " + World.instance().toto.x + "y = " + World.instance().toto.y, 40, 400);
         _spriteBatch.end();
 		_gui.render();
-		_zoomController.render();
+		//_zoomController.render();
         menu.render();
         _homeButton.draw();
 	}
@@ -121,7 +122,7 @@ public class GUIController {
         World.instance().toto.y -= deltaY;
         menu.touch(x, y, deltaX, deltaY);
 		_gui.touch(x, y, deltaX, deltaY);
-		_zoomController.touch(x, y, deltaX, deltaY);
+		//_zoomController.touch(x, y, deltaX, deltaY);
 	}
 	
 	public void tap(float x, float y) {

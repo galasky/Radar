@@ -39,8 +39,10 @@ public class LoadStation extends Thread {
         //Game3D.instance().instances.clear();
        // You.instance().updateFloor();
 
-        if (filtre)
+        if (filtre) {
+            StationManager.instance().unSelectBubble();
             StationManager.instance().filtreDistance();
+        }
         else
             StationManager.instance().add(Territory.instance().getListStopByDistance(Config.instance().distance3, You.instance().coordinate));
     }

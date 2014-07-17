@@ -91,6 +91,7 @@ public class MyCamera {
 	
 	public void	zoomTo(float zoomTo) {
 		_zoomTo = zoomTo;
+        ZoomController.instance().zoomFinish = false;
 	}
 	
 	private void filtre() {
@@ -122,6 +123,8 @@ public class MyCamera {
 			_zoom = _zoomTo;
 		else
 			_zoom += (_zoomTo > _zoom ? 0.5 : -0.5);
+        if (_zoom == _zoomTo)
+            ZoomController.instance().zoomFinish = true;
 		filtre();
 		if (firstPerson == true)
 			firstPerson();
