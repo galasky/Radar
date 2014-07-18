@@ -1,7 +1,5 @@
 package com.mygdx.radar.android;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,9 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.TimerTask;
-
-// In GUIController class
 public class ZoomController {
 	private OrthographicCamera  camera;
 	private SpriteBatch         myBatch;
@@ -19,22 +14,18 @@ public class ZoomController {
 	private Vector2             cursorB;
 	private	Vector2	            cursor;
 	private boolean             touch;
-	private float	            len;
-	private float	            direction;
-	private	int		            position;
+    private MyFont              fDistance;
 	private ShapeRenderer       shapeDebugger;
     private LoadStation         loadStation;
 	public boolean              zoomFinish;
 	private ZoomController() {
         loadStation = new LoadStation();
-		position = 0;
-		direction = 0;
+        fDistance = new MyFont("font/HelveticaNeue.ttf", 30);
 		int w = Gdx.graphics.getWidth();
 		int h = Gdx.graphics.getHeight();
 		touch = false;
-		cursorA = new Vector2(w / 3, h - h / 9);
-		cursorB = new Vector2(2 * w / 3, h - h / 9);
-		len = new Vector2(cursorA.x - cursorB.x, cursorA.y - cursorB.y).len();
+		cursorA = new Vector2(w / 3, h - 50);
+		cursorB = new Vector2(2 * w / 3, h - 50);
 		cursor = new Vector2(cursorA);
 		camera = new OrthographicCamera(w, h);
 	    camera.setToOrtho(true, w, h);
@@ -42,24 +33,9 @@ public class ZoomController {
 		myBatch = new SpriteBatch();
 		shapeDebugger = new ShapeRenderer();
 	}
-	
-	private void move(float d) {
-		direction = d;
-		touch = true;
-		cursor.x += direction;
-		position = -1;
-		if (cursor.x < cursorA.x) {
-			cursor.x = cursorA.x;
-			direction = 0;
-		}
-		if (cursor.x > cursorB.x) {
-			cursor.x = cursorB.x;
-			direction = 0;
-		}
-	}
 
     public void zoomIn() {
-        if (zoomFinish == false)
+        if (!zoomFinish)
             return ;
         if (Config.instance().distance == Config.instance().distance2)
             distance1();
@@ -68,58 +44,13 @@ public class ZoomController {
     }
 
     public void zoomOut() {
-        if (zoomFinish == false)
+        if (!zoomFinish)
             return ;
         if (Config.instance().distance == Config.instance().distance1)
             distance2();
         else if (Config.instance().distance == Config.instance().distance2)
             distance3();
     }
-	
-	public void touch(float x, float y, float deltaX, float deltaY) {
-		Vector2 v = new Vector2(x - cursor.x, y - cursor.y);
-		
-		if (v.len() <= 200 && deltaY > 0) {
-			move(deltaX);
-		}
-	}
-
-	private void update() {
-		/*if (!touch)
-		{
-			if (position == -1)
-				cursor.x += (direction < 0 ? -len / 50 : (Math.abs(cursor.x - cursorA.x) > 10 ? len / 50 : 0));
-				if (Math.abs(cursor.x - (cursorA.x + cursorB.x) / 2) < len / 25)
-				{
-					cursor.x = (cursorA.x + cursorB.x) / 2;
-					direction = 0;
-					if (position != 1) {
-                        zoom2();
-                    }
-                    position = 1;
-				}
-			if (cursor.x > cursorB.x)
-			{
-				cursor.x = cursorB.x;
-				direction = 0;
-                if (position != 2)
-                {
-                    zoom3();
-                }
-                position = 2;
-			}
-			if (cursor.x <= cursorA.x)
-			{
-				cursor.x = cursorA.x;
-				direction = 0;
-                if (position != 0) {
-                    zoom1();
-                }
-                position = 0;
-			}
-		}*/
-
-	}
 
     public void distance1() {
         Config.instance().distance = Config.instance().distance1;
@@ -127,6 +58,7 @@ public class ZoomController {
         LoadStation load = new LoadStation();
         load.filtre = true;
         load.start();
+        cursor.x = cursorA.x;
         MyCamera.instance().zoomTo(10);
     }
 
@@ -135,6 +67,7 @@ public class ZoomController {
         LoadStation load = new LoadStation();
         load.filtre = true;
         load.start();
+        cursor.x = (cursorA.x + cursorB.x) / 2;
         MyCamera.instance().zoomTo(20);
     }
 
@@ -143,12 +76,12 @@ public class ZoomController {
         LoadStation load = new LoadStation();
         load.filtre = true;
         load.start();
+        cursor.x = cursorB.x;
         MyCamera.instance().zoomTo(26);
     }
 
 	public void render() {
-		/*update();
-		myBatch.begin();
+        myBatch.begin();
 		Gdx.gl20.glLineWidth(10);
 		shapeDebugger.setProjectionMatrix(camera.combined);
 	    shapeDebugger.begin(ShapeType.Line);
@@ -167,7 +100,13 @@ public class ZoomController {
 	    shapeDebugger.circle(cursor.x, cursorA.y, 30);
 	    shapeDebugger.end();
 	    myBatch.end();
-		touch = false;*/
+        myBatch.begin();
+        fDistance.draw(myBatch, (int) (Config.instance().distance1 * 1000) +" m", cursorA.x - 33, Gdx.graphics.getHeight() - (cursorA.y - 66));
+        fDistance.draw(myBatch, (int) (Config.instance().distance2 * 1000) +" m", (cursorA.x + cursorB.x) / 2 - 33, Gdx.graphics.getHeight() - (cursorA.y - 66));
+        fDistance.draw(myBatch, (int) (Config.instance().distance3 * 1000) +" m", cursorB.x - 33, Gdx.graphics.getHeight() - (cursorA.y - 66));
+        myBatch.end();
+
+		touch = false;
 	}
 
     public static ZoomController instance() {
@@ -176,5 +115,24 @@ public class ZoomController {
 
     private static class SingletonHolder {
         private final static ZoomController instance = new ZoomController();
+    }
+
+    public void tap(float x, float y) {
+        y = Gdx.graphics.getHeight() - y;
+        float distance = (float) Math.sqrt((cursorA.x - x) * (cursorA.x - x) + (cursorA.y - y) * (cursorA.y - y));
+        if (distance < 100)
+        {
+            distance1();
+        }
+        distance = (float) Math.sqrt(((cursorA.x + cursorB.x) / 2 - x) * ((cursorA.x + cursorB.x) / 2 - x) + (cursorA.y - y) * (cursorA.y - y));
+        if (distance < 100)
+        {
+            distance2();
+        }
+        distance = (float) Math.sqrt((cursorB.x - x) * (cursorB.x  - x) + (cursorB.y - y) * (cursorB.y - y));
+        if (distance < 100)
+        {
+            distance3();
+        }
     }
 }

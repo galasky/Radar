@@ -6,21 +6,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 public class DetecteurGeste implements GestureListener {
-    private  Timer timer;
-	private boolean ok;
-	
 	public DetecteurGeste() {
-        ok = false;
-        timer = new Timer();
 	}
 	
     @Override
     public boolean zoom (float DistanceInitial, float DistanceActuel) {
-        Log.d("ok", "DistanceInitial " + DistanceInitial + " DistanceActuel " + DistanceActuel);
         if (DistanceActuel - DistanceInitial > 200)
         {
             ZoomController.instance().zoomIn();
@@ -29,7 +20,6 @@ public class DetecteurGeste implements GestureListener {
         {
             ZoomController.instance().zoomOut();
         }
-    	//MyCamera.instance().zoom(DistanceInitial, DistanceActuel);
     	return false;
     }
 

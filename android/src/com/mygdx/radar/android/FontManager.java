@@ -2,9 +2,6 @@ package com.mygdx.radar.android;
 
 import java.util.ArrayList;
 
-/**
- * Created by Administrateur on 17/06/2014.
- */
 public class FontManager {
 
     public ArrayList<MyFont> _listFont;

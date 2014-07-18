@@ -1,67 +1,42 @@
 package com.mygdx.radar.android;
 
-import android.util.Log;
-
 import java.util.Date;
 import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 
 public class BubbleStop {
-	public Vector2		position;
-	//public List<StopTimes>	listStopTimes;
-	private Vector2		_direction;
-    public Vector2      pAffichage, pSave;
-	public	float		slide;
-	public Station		station;
-	public int			order;
-	private float		_inertie;
-	//public	float		distance;
-	public boolean		touch;
-	private float		_timeTouch;
-	private float		_timeSelect;
-	//public MyTimes		nextTime;
-	public boolean		select;
-	private Date		_today;
+	public Vector2		    position;
+	private Vector2		    _direction;
+    public Vector2          pAffichage, pSave;
+	public	float		    slide;
+	public Station		    station;
+	public int			    order;
+	private float		    _inertie;
+	public boolean		    touch;
+	private float		    _timeTouch;
+	public boolean		    select;
     private BubbleDrawer    bd;
-	private SoundManager	soundManager;
-	//public float		distanceTemps;
-
-    private You         _you;
-
-    private Vector2		_goTo;
+    private Vector2		    _goTo;
 
 	
 	public BubbleStop(Station s) {
-
         bd = BubbleDrawer.instance();
-        _you = You.instance();
         pAffichage = null;
         pSave = null;
-		//soundManager = SoundManager.instance();
-		//soundManager.get("pop.mp3").play();
 		order = -1;
 		_goTo = null;
-		_today = new Date();
 		station = s;
 		slide = 0;
-		//listStopTimes = Territory.instance().getListStopTimesByStopId(station.stops.get(0).stop_id);
-		//distance = (float) Territory.distanceAB(You.instance().coordinate, station.stops.get(0).coord);
-		//distanceTemps = distance / 5;
 		position = new Vector2();
 		touch = false;
 		select = true;
 		_timeTouch = 0;
-		_timeSelect = 0;
 		check();
-		//refreshNextTime();
 	}
 
     public void setpAffichage(Vector2 pa)
@@ -73,38 +48,23 @@ public class BubbleStop {
 		_direction = new Vector2(GUIController.random(-10, 10), GUIController.random(-10, 10));
 		_inertie = 2f;
 	}
+
+    public void hide() {
+        pAffichage = new Vector2(-600, pAffichage.y);
+    }
+
+    public void visible() {
+        pAffichage = new Vector2(Gdx.graphics.getWidth() / 2 - 400, pAffichage.y);
+    }
 	
 	public void initPosition(Vector2 goTo) {
 		_goTo = goTo;
 	}
 	
 	public boolean collision(float x, float y) {
-
-//        (-73 - (station.stops.size()) * 76) * slide / 50
 		return (x >= position.x && x <= position.x + 800 && y >=  position.y + (-73 - (station.stops.size()) * 76) * slide / 50 && y <= position.y);
 	}
-	
-	public void		move(float deltaX, float deltaY)
-	{
-		_timeTouch = 0;
-		_inertie = 1;
-		_direction.x = deltaX;
-		_direction.y = deltaY;
-	}
 
-	public void select()
-	{
-		slide = 0;
-		select = true;
-        pSave = new Vector2(position.x, position.y);
-	}
-	
-	public void unSelect()
-	{
-		slide = 50;
-		select = false;
-	}
-	
 	private	void goTo() {
 		position.x += (_goTo.x - position.x) * 0.1;
 		position.y += (_goTo.y - position.y) * 0.1;
@@ -180,8 +140,6 @@ public class BubbleStop {
         bd.fontNum.setColor(Color.WHITE);
         bd.myBatch.begin();
         Gdx.gl20.glLineWidth(10);
-
-        //Enable transparency
         Gdx.gl.glEnable(GL20.GL_BLEND);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
@@ -194,31 +152,10 @@ public class BubbleStop {
         bd.shapeDebugger.end();
         bd.myBatch.end();
 
-	/*	myBatch.begin();
-		Gdx.gl20.glLineWidth(20);
-
-		//Enable transparency
-		Gdx.gl.glEnable(GL20.GL_BLEND);
-		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-
-		shapeDebugger.setProjectionMatrix(MyCamera.instance().pCam.combined);
-	    shapeDebugger.begin(ShapeType.Line);
-	    shapeDebugger.setColor(1f, 1f, 1f, 0.80f);
-	    Vector3 A = new Vector3(_bubbleSelect.station.position.y, 0.8f, _bubbleSelect.station.position.x);
-	    Vector3 B = MyCamera.instance().transorm(_bubbleSelect.position);
-
-	    shapeDebugger.line(A, B);
-	    shapeDebugger.end();
-	    myBatch.end();*/
-
         Gdx.gl.glDisable(GL20.GL_BLEND);
-
-
         bd._spriteBatch.begin();
-        Date d = new Date();
         int nb, walkingTime;
         bd.fontStationName.draw(bd._spriteBatch, station.name, 159 + position.x - 138, -17 + position.y);
-        //_font.draw(_spriteBatch, toto.x + " " + toto.y, 400, 400);
         bd.fontNum.setColor(bd.green);
         bd.fontNum.draw(bd._spriteBatch, ((walkingTime = (int) (station.distanceTemps * 60)) <= 9 ? "0" + walkingTime : walkingTime) + " mn", -45 + 662 + position.x - (50 - slide) * 2, -17 + position.y - 10);
         bd.sWalking.setPosition(position.x + 610 + -45 - (50 - slide) * 2, -20 + position.y - 35 - 10);
@@ -226,10 +163,9 @@ public class BubbleStop {
         bd._spriteBatch.end();
         Iterator<Stop> i = station.stops.iterator();
         nb = 0;
-
         while (i.hasNext()) {
             bd.fontNum.setColor(Color.WHITE);
-            int t = 999;
+            int t;
 
             Stop stop = i.next();
             nb++;
@@ -240,8 +176,8 @@ public class BubbleStop {
             bd.shapeDebugger.setProjectionMatrix(guiController.camera.combined);
             bd.shapeDebugger.begin(ShapeRenderer.ShapeType.Filled);
             bd.shapeDebugger.setColor(bd.grey);
-            bd.shapeDebugger.rect(position.x - Gdx.graphics.getWidth() / 2 + 612 + 0 * 62, -141 + position.y - Gdx.graphics.getHeight() / 2 + (nb - 1) * -77, 60, 60);
-            bd.shapeDebugger.rect(position.x - Gdx.graphics.getWidth() / 2 + 612 + 1 * 62, -141 + position.y - Gdx.graphics.getHeight() / 2 + (nb - 1) * -77, 60, 60);
+            bd.shapeDebugger.rect(position.x - Gdx.graphics.getWidth() / 2 + 612, -141 + position.y - Gdx.graphics.getHeight() / 2 + (nb - 1) * -77, 60, 60);
+            bd.shapeDebugger.rect(position.x - Gdx.graphics.getWidth() / 2 + 612 + 62, -141 + position.y - Gdx.graphics.getHeight() / 2 + (nb - 1) * -77, 60, 60);
             bd.shapeDebugger.rect(position.x - Gdx.graphics.getWidth() / 2 + 612 + 2 * 62, -141 + position.y - Gdx.graphics.getHeight() / 2 + (nb - 1) * -77, 60, 60);
             bd.shapeDebugger.end();
             bd.myBatch.end();
@@ -256,8 +192,7 @@ public class BubbleStop {
 
             t = 999;
             String n = new String();
-
-            String str = new String();
+            String str;
 
             str = "" + (stop.list_time == null ||stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
 

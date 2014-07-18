@@ -24,10 +24,12 @@ public class StationManager {
 	private List<BubbleStop>		listTmp;
     public  ArrayList<BubbleStop>   listLoaded, listCache;
 	public boolean					endDraw;
-    public BubbleStop              bubbleSelected;
+    public BubbleStop               bubbleSelected;
+    public boolean                  hide;
     private Vector2                 positionFirst;
 
 	private StationManager () {
+        hide = false;
         bubbleSelected = null;
         listLoaded = new ArrayList<BubbleStop>();
         listCache = new ArrayList<BubbleStop>();
@@ -71,13 +73,12 @@ public class StationManager {
         }
     }
 
-	public void add(List<Stop> listStop) {
-		Iterator<Stop> i = listStop.iterator();
-		listStation = new ArrayList<Station>();
-        Log.d("ok", "galasky " + listStop.size());
-		while (i.hasNext())
-		{
-			Stop stop = i.next();
+    public void   addListStop(List<Stop> listStop) {
+        Iterator<Stop> i = listStop.iterator();
+        listStation = new ArrayList<Station>();
+        while (i.hasNext())
+        {
+            Stop stop = i.next();
             if (!stopExist(stop))
             {
 
@@ -86,7 +87,6 @@ public class StationManager {
                 station.stops.add(stop);
                 station.name = stop.stop_name;
                 station.coord = stop.coord;
-                //station.distanceAffichage = distance;
                 i.remove();
                 Iterator<Stop> u = listStop.iterator();
                 while (u.hasNext())
@@ -103,17 +103,15 @@ public class StationManager {
                 station.moyCoord();
                 station.getListStopTimes();
                 listStation.add(station);
-                //showStation(station);
                 loadInstance(station);
                 loadBubble(station);
                 LoadStation load = new LoadStation();
                 load.filtre = true;
                 load.start();
             }
-		}
-		_loadFinish = true;
-        //filtreDistance();
-	}
+        }
+        _loadFinish = true;
+    }
 
     public void filtreDistance() {
         if (World.instance().listBubbleStop == null)
@@ -140,10 +138,11 @@ public class StationManager {
         for (int i = 0; i < World.instance().listBubbleStop.size(); i++)
         {
             BubbleStop bubbleStop = World.instance().listBubbleStop.get(i);
-            Log.d("ioj", "STATION FILTRE NAME " + bubbleStop.station.name + " DISTANCE "+ bubbleStop.station.distance);
             if (bubbleStop.station.distance > Config.instance().distance) {
                 if (bubbleSelected == null)
                     listLoaded.add(bubbleStop);
+                if (World.instance().listBubbleStop.size() <= i)
+                    return ;
                 World.instance().listBubbleStop.remove(i);
                 i--;
                 for (int u = 0; u < Game3D.instance().instances.size; u++)
@@ -164,15 +163,10 @@ public class StationManager {
 
     private void showStation(Station station)
     {
-        Log.d("ok", "station name : " + station.name);
-        Log.d("ok", "station position : latitude : " + station.coord.latitude + " longitude : " + station.coord.longitude);
-        Log.d("ok", "station ListStop :");
         for (int i = 0; i < station.stops.size(); i++)
         {
             Stop stop = station.stops.get(i);
-            Log.d("ok", "stop name : " + stop.destination);
         }
-        Log.d("ok", "station");
     }
 
 	public void loadInstance(Station station) {
@@ -193,11 +187,10 @@ public class StationManager {
 	    station.instance = instance;
 	    station.instance.transform.setTranslation(decal.x, 0.971f, decal.z);
 	    station.instance.transform.scale(0.35f, 0.35f, 0.35f);
-        //station.instance.transform.rotate(new Vector3(0, 1, 0), -43.39995f);
-	    //Game3D.instance().instances.add(instance);
 	}
 	
 	public void loadBubble(Station station) {
+        Log.d("ok", "name " + station.name + " longitude " + station.coord.longitude + " latitude " + station.coord.latitude);
 		BubbleStop bubble = new BubbleStop(station);
 		bubble.position.x = GUIController.random(40, Gdx.graphics.getWidth() - 40 * station.name.length() / 2);
 		bubble.position.y = GUIController.random(Gdx.graphics.getHeight(), Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 8);
@@ -230,7 +223,7 @@ public class StationManager {
             return ;
         bubbleSelected = bubbleStop;
         positionFirst = World.instance().listBubbleStop.get(0).position;
-        bubbleStop.pAffichage = new Vector2(bubbleStop.pAffichage.x, Gdx.graphics.getHeight() - 100);
+        bubbleStop.pAffichage = new Vector2(Gdx.graphics.getWidth() / 2 - 400, Gdx.graphics.getHeight() - 100);
         for (int u = 0; u < Game3D.instance().instances.size; u++)
         {
             ModelInstance instance = Game3D.instance().instances.get(u);
@@ -254,7 +247,8 @@ public class StationManager {
         if (bubbleSelected != null)
         {
             bubbleSelected.pAffichage = new Vector2(positionFirst);
-//            for (int i = 0; i < listCache)
+            if (hide)
+                bubbleSelected.pAffichage.x = -400;
         }
 
     }
@@ -262,13 +256,11 @@ public class StationManager {
     public void unSelectBubble() {
         if (bubbleSelected == null)
             return ;
-        Log.d("ok", "UNSELECT OK " + listCache.size());
         //World.instance().listBubbleStop.remove(0);
 
         for (int u = 0; u < listCache.size(); u++)
         {
             BubbleStop bubbleStop = listCache.get(u);
-            Log.d("ok", "UNSELECT ADD " + listCache.size());
             Game3D.instance().instances.add(bubbleStop.station.instance);
             addBubble(bubbleStop);
         }
@@ -294,6 +286,9 @@ public class StationManager {
             if (!find && bubbleStop.station.distance < b.station.distance)
             {
                 bubbleStop.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400,  start + ecart));
+                if (hide)
+                    bubbleStop.hide();
+
                 listBubbleStop.add(i, bubbleStop);
                 find = true;
             }
@@ -309,6 +304,8 @@ public class StationManager {
         if (find)
             return ;
         bubbleStop.setpAffichage(new Vector2(Gdx.graphics.getWidth() / 2 - 400, start + ecart));
+        if (hide)
+            bubbleStop.hide();
         listBubbleStop.add(bubbleStop);
     }
 }

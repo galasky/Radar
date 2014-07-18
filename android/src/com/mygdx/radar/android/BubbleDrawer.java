@@ -7,9 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
-/**
- * Created by Administrateur on 26/06/2014.
- */
 public class BubbleDrawer {
 
     public SpriteBatch     _spriteBatch;
@@ -19,9 +16,9 @@ public class BubbleDrawer {
     public MyFont          fontNum, fontStationName, fontWalk;
     public SpriteBatch     myBatch;
     public Color           green, orange, red, grey, blue, cercle1, cercle2, transparence;
-    public Sprite           sprite;
-    public MyFont           _font;
-    public Texture          texture;
+    public Sprite          sprite;
+    public MyFont          _font;
+    public Texture         texture;
 
     private BubbleDrawer() {
         fontNum = new MyFont("font/HelveticaNeueCondensedBold.ttf", 48);
