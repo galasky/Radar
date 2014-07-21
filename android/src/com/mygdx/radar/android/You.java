@@ -24,7 +24,6 @@ import java.io.IOException;
 public class You {
 	public ModelInstance 	modelInstance;
 	public Vector3			position;
-	private boolean 		_loaded;
 	public CoordinateGPS	coordinate;
 	private ModelBuilder 	modelBuilder;
 	public CoordinateGPS	start;
@@ -38,9 +37,8 @@ public class You {
         _height = 2000;
 		modelBuilder = new ModelBuilder();
 		position = new Vector3(0, 0, 0);
-		_loaded = true;
 		steve = null;
-		coordinate = null;
+		coordinate = new CoordinateGPS();
 		start = null;
 	}
 	
@@ -63,7 +61,6 @@ public class You {
         modelInstance = new ModelInstance(model);
         updateFloor();
         Game3D.instance().instances.add(modelInstance);
-       	_loaded = true;
 	}
 
     public void updateFloor() {
@@ -120,22 +117,21 @@ public class You {
     }
 
 	public void setPosition(Location location) {
-		if (!_loaded || modelInstance == null)
-			return ;
+        coordinate.latitude = location.getLatitude();
+        coordinate.longitude = location.getLongitude();
+        Log.d("ok", "SETPOSITION");
+        /*if (!_loaded || modelInstance == null)
+			return ;*/
 
 		if (start == null)
 		{
             new RequetAPI().execute();
 			start = new CoordinateGPS(location.getLatitude(), location.getLongitude());
-			coordinate = new CoordinateGPS(start.latitude, start.longitude);
-			coordinate.latitude = location.getLatitude();
-			coordinate.longitude = location.getLongitude();
             new LoadStation().start();
+            Log.d("ok", "SETPOSITION OK");
 		}
 		else
 		{
-			coordinate.latitude = location.getLatitude();
-			coordinate.longitude = location.getLongitude();
             if (World.instance().listBubbleStop != null) {
                 for (int i = 0; i < World.instance().listBubbleStop.size(); i++) {
                     BubbleStop b = World.instance().listBubbleStop.get(i);

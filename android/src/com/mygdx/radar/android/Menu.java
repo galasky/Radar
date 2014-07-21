@@ -1,55 +1,38 @@
 package com.mygdx.radar.android;
 
-import android.widget.Button;
-
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.mygdx.radar.MyGdxRadar;
 
-/**
- * Created by Administrateur on 06/06/2014.
- */
 public class Menu {
-    public boolean active, desactive;
-    public boolean opened;
-    private SpriteBatch myBatch;
+    public boolean          active, desactive;
+    public boolean          opened;
+    private SpriteBatch     myBatch;
     private Info            info;
-    private ShapeRenderer shapeDebugger;
-    private GUIController guiController;
-    private int         slide, maxSlide;
-    private PushButton  parametres;
-    private PushButton  Buttoninfo;
-    private boolean     showInfo;
-    private MyFont      font;
-    private ListFont    listFont;
+    private ShapeRenderer   shapeDebugger;
+    private GUIController   guiController;
+    private int             slide, maxSlide;
+    private PushButton      parametres;
+    private PushButton      Buttoninfo;
+    private boolean         showInfo;
 
     public class ActionParametres implements IAction {
         public void exec() {
-            if (listFont == null)
-                listFont = new ListFont(guiController);
-            else
-                listFont = null;
+
         }
     }
 
     public class ActionInfo implements IAction {
         public void exec() {
-            if (showInfo)
-                showInfo = false;
-            else
-                showInfo = true;
+            showInfo = !showInfo;
         }
     }
 
     public Menu(GUIController gui) {
         info = new Info(gui);
-        listFont = null;
-        font = new MyFont("font/HelveticaNeue.ttf", 20);
         showInfo = false;
         maxSlide = 100;
         slide = 0;
@@ -72,10 +55,6 @@ public class Menu {
     }
 
     public void touch(float x, float y, float deltaX, float deltaY) {
-        if (listFont != null)
-        {
-            listFont.touch(x, y, deltaX, deltaY);
-        }
     }
 
     private void update() {
@@ -95,7 +74,6 @@ public class Menu {
                 slide -= 10;
             else
             {
-                listFont = null;
                 opened = false;
                 desactive = false;
             }
@@ -107,12 +85,6 @@ public class Menu {
     public void tap(float x, float y) {
         parametres.tap(x, y);
         Buttoninfo.tap(x, y);
-    }
-
-    private void showInfo(){
-        font.setColor(Color.WHITE);
-        shapeDebugger.rect(-Gdx.graphics.getWidth() / 2,  0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2);
-        font.draw(myBatch, "Radar vii.jj Copyright expert-its, Lambert-Tesserenc et Regis MARTY", 40, World.instance().tata.y);
     }
 
     public void render() {
@@ -138,8 +110,6 @@ public class Menu {
             myBatch.end();
             parametres.draw();
             Buttoninfo.draw();
-            if (listFont != null)
-                listFont.render();
         }
     }
 }

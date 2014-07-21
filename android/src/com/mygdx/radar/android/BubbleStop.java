@@ -65,6 +65,10 @@ public class BubbleStop {
 		return (x >= position.x && x <= position.x + 800 && y >=  position.y + (-73 - (station.stops.size()) * 76) * slide / 50 && y <= position.y);
 	}
 
+    public float getHeight() {
+        return (-73 - (station.stops.size()) * 76) * slide / 50;
+    }
+
 	private	void goTo() {
 		position.x += (_goTo.x - position.x) * 0.1;
 		position.y += (_goTo.y - position.y) * 0.1;
@@ -191,7 +195,7 @@ public class BubbleStop {
             bd._font.draw(bd._spriteBatch, stop.destination, 152 + position.x, -21 + -17 + -23 + 40 + position.y - nb * (slide + 28));
 
             t = 999;
-            String n = new String();
+            String n = "";
             String str;
 
             str = "" + (stop.list_time == null ||stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);

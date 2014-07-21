@@ -1,4 +1,4 @@
-package com.mygdx.radar.android;
+/*package com.mygdx.radar.android;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -7,9 +7,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 
-/**
- * Created by Administrateur on 16/06/2014.
- */
+
 public class ListFont {
     private SpriteBatch myBatch;
     private ShapeRenderer shapeDebugger;
@@ -57,3 +55,4 @@ public class ListFont {
         myBatch.end();
     }
 }
+*/

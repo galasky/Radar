@@ -1,7 +1,6 @@
 package com.mygdx.radar.android;
 
 import android.os.Bundle;
-
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import android.location.Location;
@@ -38,6 +37,13 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
                 this);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        return ;
+    }
+
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -48,11 +54,7 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
     public void onLocationChanged(Location location) {
         // TODO Auto-generated method stub
         Log.d("ok", "longitude = " + location.getLongitude() + " latitude = " + location.getLatitude());
-        if (!World.instance().loadListStop.loaded) {
-            World.instance().loadListStop.location = location;
-        }
-        else
-            You.instance().setPosition(location);
+        You.instance().setPosition(location);
     }
 
     @Override

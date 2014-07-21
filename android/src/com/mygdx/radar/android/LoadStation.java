@@ -12,10 +12,11 @@ public class LoadStation extends Thread {
         while (Game3D.instance().modelStation == null || You.instance().coordinate == null)
             ;
         if (filtre) {
-            StationManager.instance().unSelectBubble();
-            StationManager.instance().filtreDistance();
+               StationManager.instance().unSelectBubble();
+               StationManager.instance().filtreDistance();
         }
-        else
+        else {
             StationManager.instance().addListStop(Territory.instance().getListStopByDistance(Config.instance().distance3, You.instance().coordinate));
+        }
     }
 }

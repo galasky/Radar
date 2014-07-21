@@ -1,7 +1,6 @@
 package com.mygdx.radar.android;
 
 import com.badlogic.gdx.Gdx;
-
 import java.util.Iterator;
 
 public class GUI {
@@ -38,7 +37,7 @@ public class GUI {
             StationManager.instance().hide = false;
         }
 		BubbleStop bubbleStop;
-        if (_world.listBubbleStop.get(0).pAffichage.y < 100 && deltaY > 0)
+        if (_world.listBubbleStop.get(0).pAffichage.y < Gdx.graphics.getHeight() / 2 + 100 && deltaY > 0)
             return ;
         if (_world.listBubbleStop.get(_world.listBubbleStop.size() - 1).pAffichage.y > Gdx.graphics.getHeight() - 100 && deltaY < 0)
             return ;
@@ -85,8 +84,10 @@ public class GUI {
 
             while (i < World.instance().listBubbleStop.size())
             {
+                if (i >= World.instance().listBubbleStop.size())
+                    return ;
                 BubbleStop b = World.instance().listBubbleStop.get(i);
-                if (b.position.y > 0 && b.position.y < Gdx.graphics.getHeight())
+                if (b.position.y > Gdx.graphics.getHeight() / 2 - b.getHeight() && b.position.y < Gdx.graphics.getHeight())
                      b.render(guiController);
                 i++;
             }
@@ -97,17 +98,18 @@ public class GUI {
 
 		if (_world.listBubbleStop == null)
 			return ;
-		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
-		BubbleStop bubbleStop;
-		while (i.hasNext())
-		{
-			bubbleStop = i.next();
-			if (_bubbleSelect == null && bubbleStop.collision(x, y))
-			{
-                StationManager.instance().selectBubble(bubbleStop);
-                return ;
-			}
-		}
+
+        if (y > Gdx.graphics.getHeight() / 2) {
+            Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
+            BubbleStop bubbleStop;
+            while (i.hasNext()) {
+                bubbleStop = i.next();
+                if (_bubbleSelect == null && bubbleStop.collision(x, y)) {
+                    StationManager.instance().selectBubble(bubbleStop);
+                    return;
+                }
+            }
+        }
         StationManager.instance().initUnselect();
         StationManager.instance().unSelectBubble();
         float tmp = Config.instance().distance;

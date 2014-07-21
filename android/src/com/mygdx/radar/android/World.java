@@ -9,7 +9,7 @@ import java.util.HashMap;
 public class World {
 	public  ArrayList<BubbleStop> 	listBubbleStop;
     public  HashMap<String, Stop>   mapStop;
-	public	LoadListStop			loadListStop;
+	//public	LoadListStop			loadListStop;
 
     public  HashMap<String, Route>       routes;
     public Vector2 toto, tata;
@@ -19,7 +19,7 @@ public class World {
         toto = new Vector2();
         tata = new Vector2();
         listBubbleStop = null;
-        loadListStop = new LoadListStop();
+        //loadListStop = new LoadListStop();
         routes = new HashMap<String, Route>();
         mapStop = new HashMap<String, Stop>();
 	}

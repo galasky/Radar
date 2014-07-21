@@ -1,13 +1,14 @@
 package com.mygdx.radar.android;
 
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class DetecteurGeste implements GestureListener {
-	public DetecteurGeste() {
+	private DetecteurGeste() {
 	}
 	
     @Override
@@ -67,4 +68,29 @@ public class DetecteurGeste implements GestureListener {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+    TimerTask task = new TimerTask()
+    {
+        @Override
+        public void run()
+        {
+            if (StationManager.instance().bubbleSelected == null)
+                Game3D.instance().tap(Gdx.graphics.getWidth() * 2, Gdx.graphics.getHeight() * 2);
+        }
+    };
+
+    public void run() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(task, 0, 1000);
+    }
+
+    public static DetecteurGeste instance() {
+        return SingletonHolder.instance;
+    }
+
+    private static class SingletonHolder {
+        /** Instance unique non préinitialisée */
+        private final static DetecteurGeste instance = new DetecteurGeste();
+    }
+
  }

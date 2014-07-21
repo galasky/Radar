@@ -33,12 +33,13 @@ public class RefreshGUI extends Thread {
 		for (int i = 0; i < _world.listBubbleStop.size(); i++)
 		{
 			BubbleStop bubble = _world.listBubbleStop.get(i);
-            bubble.station.calcDistance();
-			for (int u = 0; u < bubble.station.stops.size(); u++)
-			{
-				Stop stop = bubble.station.stops.get(u);
-                stop.refreshListTime();
-			}
+            if (bubble.station != null) {
+                bubble.station.calcDistance();
+                for (int u = 0; u < bubble.station.stops.size(); u++) {
+                    Stop stop = bubble.station.stops.get(u);
+                    stop.refreshListTime();
+                }
+            }
 		}
 	}
 }

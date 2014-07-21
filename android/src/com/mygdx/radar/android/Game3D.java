@@ -26,7 +26,6 @@ import com.badlogic.gdx.utils.UBJsonReader;
 public class Game3D implements ApplicationListener {
 	private MyCamera				_cam;
 	public ModelBuilder 			modelBuilder;
-    private Plate					_plate;
     private	GUIController			_guiController;
     private Texture                 tSky;
     private Sprite                  sSky;
@@ -77,6 +76,8 @@ public class Game3D implements ApplicationListener {
 	
     @Override
     public void create () {
+        instances = new Array<ModelInstance>();
+        You.instance().load();
         Log.d("ok", "LOAD CREATE");
         tSky = new Texture(Gdx.files.internal("texture/sky.png"));
         sSky = new Sprite(tSky);
@@ -84,7 +85,7 @@ public class Game3D implements ApplicationListener {
         sSky.setPosition(0, Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 2.07f);
         camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         bd = BubbleDrawer.instance();
-    	instances = new Array<ModelInstance>();
+
     	perso = new Array<ModelInstance>();
     	assets = new AssetManager();
     	loadSound();
@@ -97,11 +98,9 @@ public class Game3D implements ApplicationListener {
     	environment = new Environment();
         environment.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         environment.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, 0f, -1f, 0f));
-        _plate = new Plate(environment);
         BubbleDrawer.instance();
         _guiController = new GUIController();
-        DetecteurGeste monDetecteurGeste = new DetecteurGeste();
-		Gdx.input.setInputProcessor(new GestureDetector (monDetecteurGeste));
+		Gdx.input.setInputProcessor(new GestureDetector (DetecteurGeste.instance()));
         modelBuilder = new ModelBuilder();
         Log.d("ok", "LOAD CREATE END");
     }
@@ -127,15 +126,13 @@ public class Game3D implements ApplicationListener {
               } catch (InterruptedException e) {
                 return ;
             }
-            }   
+            }
           start = System.currentTimeMillis();
         }
     }
     
     @Override
     public void render () {
-    	//if (assets.update())
-
         _cam.update();
 
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -145,8 +142,6 @@ public class Game3D implements ApplicationListener {
         bd._spriteBatch.begin();
         sSky.draw(bd._spriteBatch);
         bd._spriteBatch.end();
-        _plate.update();
-
     	modelBatch.begin(_cam.pCam);
         modelBatch.render(instances);
         modelBatch.render(perso);

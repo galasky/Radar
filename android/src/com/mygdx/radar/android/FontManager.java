@@ -1,4 +1,4 @@
-package com.mygdx.radar.android;
+/*package com.mygdx.radar.android;
 
 import java.util.ArrayList;
 
@@ -35,3 +35,4 @@ public class FontManager {
         _listFont.add(new MyFont("font/HelveticaNeueUltraLightItalic.ttf", size));
     }
 }
+*/
