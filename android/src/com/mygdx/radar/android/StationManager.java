@@ -1,11 +1,10 @@
 package com.mygdx.radar.android;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import android.util.Log;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.math.Vector2;
@@ -40,12 +39,37 @@ public class StationManager {
         private final static StationManager instance = new StationManager();
     }
 	
-	public List<Station> getListStation() {
-		return listStation;
-	}
-	
     public boolean stopExist(Stop stop) {
         return (World.instance().mapStop.get(stop.stop_id) != null);
+    }
+
+    public boolean stationExist(Station station) {
+        return (World.instance().mapStation.get(station.station_id) != null);
+    }
+
+    public void addListStation(List<Station> list) {
+        listStation = new ArrayList<Station>();
+
+        for (int i = 0; i < list.size(); i++)
+        {
+            Station station = list.get(i);
+            if (!stationExist(station)) {
+                World.instance().mapStation.put(station.station_id, station);
+                station.calcDistance();
+//                Log.d("ok", "add station " + station.name);
+                station.getListStopTimes();
+                listStation.add(station);
+                if (listStation.size() == 1)
+                    DetecteurGeste.instance().run();
+                loadInstance(station);
+                loadBubble(station);
+                if (bubbleSelected == null) {
+                    LoadStation load = new LoadStation();
+                    load.filtre = true;
+                    load.start();
+                }
+            }
+        }
     }
 
     public void   addListStop(List<Stop> listStop) {
@@ -56,7 +80,6 @@ public class StationManager {
             Stop stop = i.next();
             if (!stopExist(stop))
             {
-
                 World.instance().mapStop.put(stop.stop_id, stop);
                 Station station = new Station();
                 station.stops.add(stop);
@@ -76,6 +99,7 @@ public class StationManager {
                     }
                 }
                 station.moyCoord();
+                Log.d("ok ", "JSON " + station.name + " longitude " + station.coord.longitude + " latitude " + station.coord.latitude);
                 station.getListStopTimes();
                 listStation.add(station);
                 if (listStation.size() == 1)
@@ -89,6 +113,7 @@ public class StationManager {
                 }
             }
         }
+        World.instance().statu = 1;
     }
 
     public void filtreDistance() {
@@ -149,10 +174,9 @@ public class StationManager {
 	}
 	
 	public void loadBubble(Station station) {
-        Log.d("ok", "name " + station.name + " longitude " + station.coord.longitude + " latitude " + station.coord.latitude);
 		BubbleStop bubble = new BubbleStop(station);
 		bubble.position.x = GUIController.random(40, Gdx.graphics.getWidth() - 40 * station.name.length() / 2);
-		bubble.position.y = GUIController.random(Gdx.graphics.getHeight(), Gdx.graphics.getHeight() - Gdx.graphics.getHeight() / 8);
+		bubble.position.y = GUIController.random(Gdx.graphics.getHeight(), - Gdx.graphics.getHeight() * 2);
 		if (World.instance().listBubbleStop == null)
 			World.instance().listBubbleStop = new ArrayList<BubbleStop>();
 		if (endDraw)

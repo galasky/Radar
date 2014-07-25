@@ -57,14 +57,47 @@ public class GUIController {
 		}
 	}
 
+    private int nbUp() {
+        int nb = 0;
+
+        if (World.instance().listBubbleStop == null)
+            return 0;
+        for (int i = 0; i < World.instance().listBubbleStop.size(); i++)
+        {
+            BubbleStop bubbleStop = World.instance().listBubbleStop.get(i);
+            if (bubbleStop.statu == 1)
+                nb++;
+        }
+        return nb;
+    }
+
+    private int nbDown() {
+        int nb = 0;
+        if (World.instance().listBubbleStop == null)
+            return 0;
+        for (int i = 0; i < World.instance().listBubbleStop.size(); i++)
+        {
+            BubbleStop bubbleStop = World.instance().listBubbleStop.get(i);
+            if (bubbleStop.statu == -1)
+                nb++;
+        }
+        return nb;
+    }
+
 	public void	render() {
 		updateTime();
 		MyTimes time = new MyTimes(new Date());
-		
+        _gui.render();
 		_spriteBatch.begin();
+        int nbup = nbUp();
+        if (nbup > 0)
+            _font.draw(_spriteBatch, ""+nbup, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() - 40);
+        int nbdown = nbDown();
+        if (nbdown > 0)
+            _font.draw(_spriteBatch, ""+nbdown, Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
 		_font.draw(_spriteBatch, time.hours + ":" + (time.minutes < 10 ? "0" + time.minutes : time.minutes), Gdx.graphics.getWidth() - 130, Gdx.graphics.getHeight() - 40);
         _spriteBatch.end();
-		_gui.render();
+
 		_zoomController.render();
         menu.render();
         _homeButton.draw();

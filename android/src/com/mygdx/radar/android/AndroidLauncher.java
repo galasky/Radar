@@ -1,5 +1,7 @@
 package com.mygdx.radar.android;
 
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -9,6 +11,10 @@ import android.location.LocationManager;
 import android.util.Log;
 import android.view.WindowManager;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 public class AndroidLauncher extends AndroidApplication implements LocationListener {
 
@@ -17,6 +23,18 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        try{
+            ApplicationInfo ai = getPackageManager().getApplicationInfo(getPackageName(), 0);
+            ZipFile zf = new ZipFile(ai.sourceDir);
+            ZipEntry ze = zf.getEntry("META-INF/MANIFEST.MF");
+            long time = ze.getTime();
+            SimpleDateFormat formatter = (SimpleDateFormat) SimpleDateFormat.getInstance();
+            formatter.setTimeZone(TimeZone.getTimeZone("Europe/Paris"));
+            Config.instance().dateBuild = formatter.format(new java.util.Date(time));
+            zf.close();
+        }catch(Exception e){
+        }
 
         AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -40,7 +58,6 @@ public class AndroidLauncher extends AndroidApplication implements LocationListe
 
     @Override
     public void onBackPressed() {
-        return ;
     }
 
 

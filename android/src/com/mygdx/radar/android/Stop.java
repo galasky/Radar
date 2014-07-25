@@ -34,10 +34,22 @@ public class Stop {
         list_time = new ArrayList<MyTimes>();
     	select = false;
         destination = new String("ABCDEFGHIJKLMNO");
+        listStopTimes = new ArrayList<StopTimes>();
     }
 
     public void	getListStopTimes() {
-    	listStopTimes = Territory.instance().getListStopTimesByStopId(stop_id);
+    	Log.d("ok", "size = " + listStopTimes.size());
+        if (Config.instance().onLine)
+            Territory.instance().getListStopTimesByStopId(stop_id);
+        else
+            listStopTimes = Territory.instance().getListStopTimesByStopId(stop_id);
+        list_time = null;
+        initListTime();
+    }
+
+
+    public void	setListStopTimes() {
+        listStopTimes = Territory.instance().getListStopTimesByStopId(stop_id);
         list_time = null;
         initListTime();
     }

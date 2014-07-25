@@ -39,6 +39,7 @@ public class Game3D implements ApplicationListener {
     public ModelInstance            modelInstance;
     private BubbleDrawer            bd;
     public Model                    model, modelStation;
+    private MyFont                  font;
     private long 					start;
     
     private Game3D() {
@@ -79,6 +80,7 @@ public class Game3D implements ApplicationListener {
         instances = new Array<ModelInstance>();
         You.instance().load();
         Log.d("ok", "LOAD CREATE");
+        font = new MyFont("font/HelveticaNeue.ttf", 50);
         tSky = new Texture(Gdx.files.internal("texture/sky.png"));
         sSky = new Sprite(tSky);
         sSky.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() / 2.07f);
@@ -113,7 +115,8 @@ public class Game3D implements ApplicationListener {
     
     public void tap(float x, float y)
     {
-    	_guiController.tap(x, y);
+        if (_guiController != null)
+        	_guiController.tap(x, y);
     }
    
     public void sleep(int fps) {
@@ -134,7 +137,6 @@ public class Game3D implements ApplicationListener {
     @Override
     public void render () {
         _cam.update();
-
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.graphics.getGL20().glClearColor(147 / 255f, 199 / 255f, 255 / 255f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
@@ -146,6 +148,16 @@ public class Game3D implements ApplicationListener {
         modelBatch.render(instances);
         modelBatch.render(perso);
         modelBatch.end();
+        bd._spriteBatch.begin();
+        if (World.instance().statu == 0)
+            font.draw(bd._spriteBatch, "Loading", Gdx.graphics.getWidth() / 2 - 25 * 3.5f, Gdx.graphics.getHeight() / 2);
+        else if (World.instance().statu == -1)
+            font.draw(bd._spriteBatch, "Server error", Gdx.graphics.getWidth() / 2 - 25 * 6, Gdx.graphics.getHeight() / 2);
+        else if (World.instance().statu == -2)
+            font.draw(bd._spriteBatch, "Internet error", Gdx.graphics.getWidth() / 2 - 25 * 7, Gdx.graphics.getHeight() / 2);
+        else if (World.instance().statu == -3)
+            font.draw(bd._spriteBatch, "Data Error", Gdx.graphics.getWidth() / 2 - 25 * 7, Gdx.graphics.getHeight() / 2);
+        bd._spriteBatch.end();
         _guiController.render();
         sleep(60);
     }

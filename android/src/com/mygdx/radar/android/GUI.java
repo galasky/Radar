@@ -37,7 +37,7 @@ public class GUI {
             StationManager.instance().hide = false;
         }
 		BubbleStop bubbleStop;
-        if (_world.listBubbleStop.get(0).pAffichage.y < Gdx.graphics.getHeight() / 2 + 100 && deltaY > 0)
+        if (_world.listBubbleStop.get(0).pAffichage.y < Gdx.graphics.getHeight() / 2 + 100 - _world.listBubbleStop.get(0).getHeight() && deltaY > 0)
             return ;
         if (_world.listBubbleStop.get(_world.listBubbleStop.size() - 1).pAffichage.y > Gdx.graphics.getHeight() - 100 && deltaY < 0)
             return ;
@@ -52,11 +52,9 @@ public class GUI {
 		_initPosition = true;
 		if (_world.listBubbleStop == null)
 			return ;
-		Iterator<BubbleStop> i = _world.listBubbleStop.iterator();
-		BubbleStop bubbleStop;
-		while (i.hasNext())
+		for (int i = 0; i < _world.listBubbleStop.size(); i++)
 		{
-			bubbleStop = i.next();
+			BubbleStop bubbleStop = _world.listBubbleStop.get(i);
 			bubbleStop.initPosition(null);
 			bubbleStop.check();
 		}
@@ -69,8 +67,10 @@ public class GUI {
 		BubbleStop bubbleStop;
 		for (int i = 0; i < _world.listBubbleStop.size(); i++)
 		{
-			bubbleStop = _world.listBubbleStop.get(i);
-			bubbleStop.update();
+            if (i < _world.listBubbleStop.size()) {
+                bubbleStop = _world.listBubbleStop.get(i);
+                bubbleStop.update();
+            }
 		}
 	}
 
@@ -81,14 +81,19 @@ public class GUI {
         if (World.instance().listBubbleStop != null)
         {
             int i = 0;
-
             while (i < World.instance().listBubbleStop.size())
             {
                 if (i >= World.instance().listBubbleStop.size())
                     return ;
                 BubbleStop b = World.instance().listBubbleStop.get(i);
-                if (b.position.y > Gdx.graphics.getHeight() / 2 - b.getHeight() && b.position.y < Gdx.graphics.getHeight())
-                     b.render(guiController);
+                if (b.position.y < Gdx.graphics.getHeight() / 2 - b.getHeight())
+                    b.statu = -1;
+                else if (b.position.y > Gdx.graphics.getHeight())
+                    b.statu = 1;
+                else {
+                    b.statu = 0;
+                    b.render(guiController);
+                }
                 i++;
             }
         }

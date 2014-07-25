@@ -1,9 +1,6 @@
 package com.mygdx.radar.android;
 
 import android.location.Location;
-import android.os.AsyncTask;
-import android.util.Log;
-
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
@@ -13,13 +10,6 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import java.io.IOException;
 
 public class You {
 	public ModelInstance 	modelInstance;
@@ -77,61 +67,21 @@ public class You {
             _pixmap.fillCircle(_width / 2, _height / 2, 40 * i);
         }
         Texture _pixmapTexture = new Texture(_pixmap, Pixmap.Format.RGB888, false);
-
         TextureAttribute attr = TextureAttribute.createDiffuse(_pixmapTexture);
         modelInstance.materials.get(0).set(attr);
-    }
-
-    public class RequetAPI extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected Void doInBackground(Void... arg0) {
-            HttpClient httpclient = new DefaultHttpClient();
-            try
-            {
-                HttpGet httpget = new HttpGet("http://172.16.42.10:5000/test");
-                ResponseHandler responseHandler = new BasicResponseHandler();
-                String responseBody = (String) httpclient.execute(httpget, responseHandler);
-                Log.d("ok", "HTTP " + responseBody);
-            }
-            catch (ClientProtocolException e)
-            {
-                Log.d("ok", "HTTP 1" + e.toString());
-                e.printStackTrace();
-            }
-            catch (IOException e)
-            {
-                Log.d("ok", "HTTP 2" + e.toString());
-                e.printStackTrace();
-            }
-            finally
-            {
-                httpclient.getConnectionManager().shutdown();
-            }
-         return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-
-        }
     }
 
 	public void setPosition(Location location) {
         coordinate.latitude = location.getLatitude();
         coordinate.longitude = location.getLongitude();
-        Log.d("ok", "SETPOSITION");
-        /*if (!_loaded || modelInstance == null)
-			return ;*/
-
 		if (start == null)
 		{
-            new RequetAPI().execute();
 			start = new CoordinateGPS(location.getLatitude(), location.getLongitude());
             new LoadStation().start();
-            Log.d("ok", "SETPOSITION OK");
 		}
 		else
 		{
+           new LoadStation().start();
             if (World.instance().listBubbleStop != null) {
                 for (int i = 0; i < World.instance().listBubbleStop.size(); i++) {
                     BubbleStop b = World.instance().listBubbleStop.get(i);

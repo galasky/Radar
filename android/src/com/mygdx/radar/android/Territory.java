@@ -132,14 +132,16 @@ public class Territory {
         if (cursor.moveToFirst()) {
            // Log.d("ok", "stop_id = " + cursor.getString(cursor.getColumnIndex("trip_id")));
             do {
-                stopTimes = new StopTimes();
-                stopTimes.trip_id = cursor.getString(cursor.getColumnIndex("trip_id"));
-                stopTimes.arrival_time = new MyTimes(cursor.getString(cursor.getColumnIndex("arrival_time")));
-                stopTimes.departure_time = new MyTimes(cursor.getString(cursor.getColumnIndex("departure_time")));
-                stopTimes.stop_sequence = cursor.getString(cursor.getColumnIndex("stop_sequence"));
-                stopTimes.loadTrip();
-                listStopTimes.add(stopTimes);
-                cursor.moveToNext();
+                if (!Config.instance().onLine) {
+                    stopTimes = new StopTimes();
+                    stopTimes.trip_id = cursor.getString(cursor.getColumnIndex("trip_id"));
+                    stopTimes.arrival_time = new MyTimes(cursor.getString(cursor.getColumnIndex("arrival_time")));
+                    stopTimes.departure_time = new MyTimes(cursor.getString(cursor.getColumnIndex("departure_time")));
+                    stopTimes.stop_sequence = cursor.getString(cursor.getColumnIndex("stop_sequence"));
+                    stopTimes.loadTrip();
+                    listStopTimes.add(stopTimes);
+                    cursor.moveToNext();
+                }
             } while (cursor.moveToNext());
         }
         return listStopTimes;

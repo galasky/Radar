@@ -1,5 +1,7 @@
 package com.mygdx.radar.android;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -7,14 +9,14 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class Station {
-
+    public String           station_id;
 	public Vector2			position;
 	public ArrayList<Stop>	stops;
 	public String			name;
 	public CoordinateGPS	coord;
 	public ModelInstance	instance;
 	public float			distance;
-    private Vector2     instanceGoTo;
+    private Vector2         instanceGoTo;
 	public float			distanceTemps;
     private You             _you;
 
@@ -54,7 +56,16 @@ public class Station {
 			stop.getListStopTimes();
 		}
 	}
-	
+
+    public void	setListStopTimes() {
+        Iterator<Stop> i = stops.iterator();
+        while (i.hasNext())
+        {
+            Stop stop = i.next();
+            stop.setListStopTimes();
+        }
+    }
+
 	public void calcDistance() {
 		distance = (float) Territory.distanceAB(You.instance().coordinate, coord);
 		distanceTemps = distance / 5;

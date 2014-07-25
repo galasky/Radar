@@ -7,21 +7,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class World {
-	public  ArrayList<BubbleStop> 	listBubbleStop;
-    public  HashMap<String, Stop>   mapStop;
-	//public	LoadListStop			loadListStop;
-
-    public  HashMap<String, Route>       routes;
-    public Vector2 toto, tata;
-	
+	public  ArrayList<BubbleStop> 	    listBubbleStop;
+    public  HashMap<String, Stop>       mapStop;
+    public  HashMap<String, Station>    mapStation;
+    public  HashMap<String, Route>      routes;
+    public  Vector2 toto, tata;
+	public  int                         statu;
 	private	World() {
-
+        statu = 0;
         toto = new Vector2();
         tata = new Vector2();
         listBubbleStop = null;
         //loadListStop = new LoadListStop();
         routes = new HashMap<String, Route>();
         mapStop = new HashMap<String, Stop>();
+        mapStation = new HashMap<String, Station>();
 	}
 	
 	public static World instance() {

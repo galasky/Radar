@@ -1,5 +1,7 @@
 package com.mygdx.radar.android;
 
+import android.util.Log;
+
 import java.util.Date;
 import java.util.Iterator;
 
@@ -16,10 +18,10 @@ public class BubbleStop {
 	public	float		    slide;
 	public Station		    station;
 	public int			    order;
-	private float		    _inertie;
 	public boolean		    touch;
 	private float		    _timeTouch;
 	public boolean		    select;
+    public int              statu;
     private BubbleDrawer    bd;
     private Vector2		    _goTo;
 
@@ -46,7 +48,6 @@ public class BubbleStop {
 
 	public void	check() {
 		_direction = new Vector2(GUIController.random(-10, 10), GUIController.random(-10, 10));
-		_inertie = 2f;
 	}
 
     public void hide() {
@@ -78,14 +79,10 @@ public class BubbleStop {
 	
 	public void update() {
 
-
-
         station.update();
 		if (_goTo != null)
 			goTo();
 
-		position.x += _direction.x * _inertie;
-		position.y += _direction.y * _inertie;
 
 		if (_goTo == null)
 		{
@@ -94,9 +91,6 @@ public class BubbleStop {
 			if (position.y > Gdx.graphics.getHeight() || position.y < 5)
 				_direction.y *= -1;
 		}
-
-
-		_inertie /= 1.1;
 
 		if (select)
 		{
@@ -198,7 +192,7 @@ public class BubbleStop {
             String n = "";
             String str;
 
-            str = "" + (stop.list_time == null ||stop.list_time.size() < 1 ? "-" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            str = "" + (stop.list_time == null ||stop.list_time.size() < 1 ? "" : ((n = ((t = stop.list_time.get(0).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
 
             if (t - walkingTime <= Config.instance().timeRed)
                 bd.fontNum.setColor(bd.red);
@@ -208,7 +202,7 @@ public class BubbleStop {
                 bd.fontNum.setColor(bd.green);
             bd.fontNum.draw(bd._spriteBatch, str, 159 + position.x + 480 - 20 * (n.length() - 1), -21 + 6 + position.y - nb * (slide + 28));
 
-            str = "" + (stop.list_time == null || stop.list_time.size() < 2 ? "-" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            str = "" + (stop.list_time == null || stop.list_time.size() < 2 ? "" : ((n = ((t = stop.list_time.get(1).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
             if (t - walkingTime <= Config.instance().timeRed)
                 bd.fontNum.setColor(bd.red);
             else if (t - walkingTime <= Config.instance().timeOrange)
@@ -217,7 +211,7 @@ public class BubbleStop {
                 bd.fontNum.setColor(bd.green);
             bd.fontNum.draw(bd._spriteBatch, str, 159 + position.x + 540 - 20 * (n.length() - 1), -21 + 6 + position.y - nb * (slide + 28));
 
-            str = "" + (stop.list_time == null || stop.list_time.size() < 3 ? "-" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
+            str = "" + (stop.list_time == null || stop.list_time.size() < 3 ? "" : ((n = ((t = stop.list_time.get(2).diff(new Date())) <= 9 ? "0" + t : "" + t))).length() >= 3 ? n = "*" : n);
             if (t - walkingTime <= Config.instance().timeRed)
                 bd.fontNum.setColor(bd.red);
             else if (t - walkingTime <= Config.instance().timeOrange)

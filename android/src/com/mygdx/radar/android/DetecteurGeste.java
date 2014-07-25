@@ -8,7 +8,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class DetecteurGeste implements GestureListener {
+    private boolean run;
 	private DetecteurGeste() {
+        run = true;
 	}
 	
     @Override
@@ -80,8 +82,11 @@ public class DetecteurGeste implements GestureListener {
     };
 
     public void run() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(task, 0, 1000);
+        if (run) {
+            run = false;
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(task, 0, 1000);
+        }
     }
 
     public static DetecteurGeste instance() {
